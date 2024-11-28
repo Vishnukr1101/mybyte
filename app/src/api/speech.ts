@@ -1,3 +1,4 @@
+
 type SpeechInput = {
   text: string;
 };
@@ -17,7 +18,7 @@ export const getSpeech = ({ text }: SpeechInput): Promise<Response> =>
       body: raw,
     };
 
-    fetch("http://localhost:5000/speech", requestOptions)
+    fetch(`${import.meta.env.VITE_SERVER_URL}/speech`, requestOptions)
       .then((response) => response.text())
       .then((result) => resolve(result))
       .catch((error) => reject(error));

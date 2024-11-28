@@ -1,0 +1,17 @@
+{
+  "name": "mybyte",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Vishnukr1101/mybyte.git",
+  "author": "VISHNU K R <VISHNUKR1101@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "app": "cd app & yarn dev",
+    "server": "cd server & yarn dev",
+    "dev": "concurrently \"yarn app\" \"yarn server\" "
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
