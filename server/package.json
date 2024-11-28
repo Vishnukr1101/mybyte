@@ -1,0 +1,31 @@
+{
+  "name": "mybyte-server",
+  "main": "index.js",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "SET DEBUG=mybyte-server:* & ts-node src/index.ts",
+    "dev": "nodemon start"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity": "^3.696.0",
+    "@aws-sdk/client-polly": "^3.696.0",
+    "@aws-sdk/credential-provider-cognito-identity": "^3.696.0",
+    "@aws-sdk/polly-request-presigner": "^3.696.0",
+    "axios": "^1.7.7",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "debug": "^4.3.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/debug": "^4.1.12",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

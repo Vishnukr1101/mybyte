@@ -1,0 +1,5 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "exec": "SET DEBUG=mybyte-server:*  & ts-node ./src/index.ts"
+}
