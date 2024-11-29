@@ -1,13 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
-  Environment,
-  Html,
   OrbitControls,
-  PerspectiveCamera,
   useGLTF,
-  useTexture,
 } from "@react-three/drei";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import Avatar from "./Avatar";
 import * as THREE from "three";
 
@@ -17,6 +13,7 @@ import { degToRad } from "three/src/math/MathUtils.js";
 
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls as ThreeOrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import { rooms } from "constants/room";
 
 type Props = {
@@ -74,7 +71,6 @@ const morphTargets =
 
 const avatarUrl = `https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?useQuantizeMeshOptCompression=true&quality=high&textureQuality=high&morphTargets=${morphTargets}&pose=A`;
 
-import { useControls } from 'leva'
 import { getSpeech } from "../api/speech";
 
 const EnvironmentSpace: React.FC = React.memo((props: Props) => {
@@ -82,10 +78,7 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
     camera: sceneCameraPosition,
     avatar,
     viewMode = false,
-    ...otherProps
   } = props;
-
-  const [isAvatarReady, setIsAvatarReady] = useState(false);
 
   const background = "white_modern_living_room_4k.glb";
 
@@ -95,28 +88,25 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
 
 
   const { camera } = useThree();
-  const controlsRef = useRef<typeof OrbitControls | any>();
 
+  const controlsRef = useRef<ThreeOrbitControls | null>(null);
   // Save camera position and target to localStorage when controls change
   const handleControlsChange = () => {
-    console.log("camera: ", camera.position.toArray())
-    console.log("orbital: ", controlsRef.current.target.toArray())
-    // camera.position.toArray()
-    // controlsRef.current.target.toArray()
+    if (controlsRef.current) {
+      console.log("camera: ", camera.position.toArray())
+      console.log("orbital: ", controlsRef.current.target.toArray())
+      // camera.position.toArray()
+      // controlsRef.current.target.toArray()
+    }
   };
 
 
-  const getSpeechData = async (text: string, voice = "en-US-EmmaNeural") => {
+  const getSpeechData = async (text: string) => {
     try {
       if (!text) {
         return false;
       }
-
-      console.log("getSpeech : ", text, voice);
-      const response = await getSpeech({
-        text,
-        voice,
-      }).catch((error) => {
+      const response = await getSpeech(text).catch((error) => {
         console.error("Failed to get speech, Error: ", error);
       });
 
@@ -131,9 +121,26 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
 
         if (response.body) {
           // Set the audio source
-          const audio = URL.createObjectURL(
-            new Blob([response.body], { type: "audio/mpeg" }),
-          );
+          const reader = response.body.getReader();
+          const chunks = [];
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+          }
+
+          // Combine all chunks into a single Uint8Array
+          const audioBuffer = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+          let offset = 0;
+          chunks.forEach((chunk) => {
+            audioBuffer.set(chunk, offset);
+            offset += chunk.length;
+          });
+
+          // Create a Blob from the buffer
+          const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
+          const audio = URL.createObjectURL(audioBlob);
 
           setAudioUrl(audio);
         }
@@ -173,7 +180,7 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
       controlsRef.current.target.fromArray(target);
       controlsRef.current.update();
     }
-  }, [sceneCameraPosition, controlsRef.current]);
+  }, [sceneCameraPosition, camera.position]);
 
   // useEffect(() => {
   //   if (avatar?.speechText && avatar?.speechVoice && isAvatarReady) {
@@ -196,7 +203,7 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
 
-  const loader = new GLTFLoader();
+  const loader = useMemo(()=> new GLTFLoader(), []);
   loader.setDRACOLoader(dracoLoader);
 
   const [model, setModel] = useState<THREE.Group | null>(null);
@@ -209,15 +216,15 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
         setIsRoomReady(true);
       },
       undefined,
-      (error: Error) => {
+      (error) => {
         setIsRoomReady(false);
         console.error("An error occurred while loading the GLB file:", error);
       },
     );
-  }, [background]);
+  }, [background, loader]);
 
   const handleAvatarReady = () => {
-    setIsAvatarReady(true);
+    // setIsAvatarReady(true);
 
     if (props?.onReady) {
       props.onReady(true);
@@ -279,7 +286,12 @@ const EnvironmentSpace: React.FC = React.memo((props: Props) => {
         // maxPolarAngle={Math.PI / 2}
         // minAzimuthAngle={-(Math.PI / 2)}
         // maxAzimuthAngle={Math.PI / 2}
-        ref={controlsRef}
+        ref={(ref) => {
+          // Type assertion to access the underlying Three.js OrbitControls
+          if (ref && "current" in ref) {
+            controlsRef.current = ref.current as unknown as ThreeOrbitControls;
+          }
+        }}
         enableDamping // Optional: Adds smooth damping to the controls
         enableZoom={!viewMode} // Disable zoom
         enablePan={!viewMode} // Disable pan

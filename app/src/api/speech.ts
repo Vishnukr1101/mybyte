@@ -1,16 +1,9 @@
-
-type SpeechInput = {
-  text: string;
-};
-
-export const getSpeech = ({ text }: SpeechInput): Promise<Response> =>
+export const getSpeech = (text: string): Promise<Response> =>
   new Promise((resolve, reject) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({
-      text: text
-    });
+    const raw = JSON.stringify({ text });
 
     const requestOptions = {
       method: "POST",
@@ -19,7 +12,9 @@ export const getSpeech = ({ text }: SpeechInput): Promise<Response> =>
     };
 
     fetch(`${import.meta.env.VITE_SERVER_URL}/speech`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => resolve(result))
+      .then((response) => {
+        if (response.ok) resolve(response);
+        else reject(new Error("Failed to fetch speech data"));
+      })
       .catch((error) => reject(error));
   });

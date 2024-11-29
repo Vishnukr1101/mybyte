@@ -1,6 +1,5 @@
 import React from "react";
 import { Canvas } from "@react-three/fiber";
-import { EffectComposer, FXAA } from "@react-three/postprocessing";
 
 import EnvironmentSpace from "./EnvironmentSpace";
 

@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 // https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?useQuantizeMeshOptCompression=true&quality=high&textureQuality=high&morphTargets=ARKit,Oculus Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&pose=A
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
@@ -9,14 +11,10 @@ import { visemeMap } from "../utils";
 
 import { randInt } from "three/src/math/MathUtils.js";
 
-import { useControls } from 'leva'
 
 const morphTargetSmoothing = 0.08;
 const defaultAnimation = "idle";
-
 const ANIMATION_FADE_TIME = 0.5;
-const morphTargets =
-  "ARKit,Oculus Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown";
 
 
 type Props = {
@@ -62,7 +60,7 @@ const Avatar = React.memo((props: Props) => {
   useEffect(() => {
     setAnimate(defaultAnimation);
     return () => { };
-  }, [defaultAnimation]);
+  }, []);
 
 
   const { nodes, materials } = useGLTF(props.url);
@@ -70,7 +68,7 @@ const Avatar = React.memo((props: Props) => {
   const animationFile = `/combined.glb`;
   const { animations } = useGLTF(animationFile);
 
-  const { mixer, actions } = useAnimations(animations, group);
+  const { actions } = useAnimations(animations, group);
   console.log("animations: ", actions)
 
   useEffect(() => {
@@ -83,7 +81,7 @@ const Avatar = React.memo((props: Props) => {
     }
 
     return () => { };
-  }, [actions, group]);
+  }, [actions, group, props]);
 
   useEffect(() => {
     stop();
@@ -96,7 +94,8 @@ const Avatar = React.memo((props: Props) => {
     }
 
     return () => { };
-  }, [load, props.audioUrl]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [load, props?.audioUrl, stop]);
 
   useFrame(() => {
     if (nodes?.Wolf3D_Avatar) {
@@ -143,7 +142,7 @@ const Avatar = React.memo((props: Props) => {
     });
   };
 
-  useFrame(({ camera }) => {
+  useFrame(() => {
     // Smile
     lerpMorphTarget("mouthSmileRight", 0.2, 0.5);
     lerpMorphTarget("mouthSmileLeft", 0.2, 0.5);
@@ -194,7 +193,7 @@ const Avatar = React.memo((props: Props) => {
         actions[animate].fadeOut(0.5);
       }
     };
-  }, [animate, animations]);
+  }, [actions, animate, animations]);
 
   const blink = (eyeBlinkLeft, eyeBlinkRight) => {
     nodes.Wolf3D_Avatar.morphTargetInfluences[eyeBlinkLeft] = 1;
@@ -212,7 +211,7 @@ const Avatar = React.memo((props: Props) => {
     }
 
     return () => { };
-  }, [playing]);
+  }, [playing, props]);
 
   useEffect(() => {
     mute(props.isMuted);
