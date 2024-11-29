@@ -73,7 +73,7 @@ const avatarUrl = `https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?us
 
 import { getSpeech } from "../api/speech";
 
-const EnvironmentSpace: React.FC = React.memo((props: Props) => {
+const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   const {
     camera: sceneCameraPosition,
     avatar,
