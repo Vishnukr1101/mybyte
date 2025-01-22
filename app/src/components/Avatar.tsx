@@ -93,7 +93,7 @@ const Avatar = React.memo((props: Props) => {
     }
 
     return () => { };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [load, props?.audioUrl, stop]);
 
   useFrame(() => {
@@ -217,6 +217,114 @@ const Avatar = React.memo((props: Props) => {
 
     return () => { };
   }, [props.isMuted, mute]);
+
+// Track head or eye start
+const mousePosition = useRef({ x: 0, y: 0 }); // Mouse position storage
+const headBone = useRef<THREE.Object3D>();
+const leftEyeBone = useRef<THREE.Object3D>();
+const rightEyeBone = useRef<THREE.Object3D>();
+
+// Capture mouse movement and normalize coordinates
+useEffect(() => {
+  const handleMouseMove = (event: MouseEvent) => {
+    const { innerWidth, innerHeight } = window;
+    mousePosition.current = {
+      x: (event.clientX / innerWidth) * 2 - 1, // Normalize to -1 to 1
+      y: (event.clientY / innerHeight) * 2 - 1, // Not inverted for up/down
+    };
+  };
+
+  const handleTouchMove = (event: TouchEvent) => {
+    const { innerWidth, innerHeight } = window;
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      const normalizedX = (touch.clientX / innerWidth) * 2 - 1;
+      const normalizedY = (touch.clientY / innerHeight) * 2 - 1;
+
+      // Smoothly transition from the current position to the touch position
+      mousePosition.current.x = THREE.MathUtils.lerp(
+        mousePosition.current.x,
+        normalizedX,
+        0.2 // Smoothing factor for touch
+      );
+      mousePosition.current.y = THREE.MathUtils.lerp(
+        mousePosition.current.y,
+        normalizedY,
+        0.2 // Smoothing factor for touch
+      );
+    }
+  };
+
+  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("touchmove", handleTouchMove);
+
+  return () => {
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("touchmove", handleTouchMove);
+  };
+}, []);
+
+// Find head and eye bones
+useEffect(() => {
+  if (nodes?.Head) {
+    headBone.current = nodes?.Head;
+    leftEyeBone.current = nodes.Head.children.find(
+      (bone) => bone.name === "LeftEye"
+    );
+    rightEyeBone.current = nodes.Head.children.find(
+      (bone) => bone.name === "RightEye"
+    );
+  }
+}, [nodes]);
+
+useFrame(() => {
+  const { x, y } = mousePosition.current;
+
+  // Adjust head rotation based on mouse or touch
+  if (headBone.current) {
+    headBone.current.rotation.y = THREE.MathUtils.lerp(
+      headBone.current.rotation.y,
+      x * 2, // Scale rotation
+      0.1 // Smoothing
+    );
+    headBone.current.rotation.x = THREE.MathUtils.lerp(
+      headBone.current.rotation.x,
+      y * 2, // Scale rotation
+      0.1 // Smoothing
+    );
+  }
+
+  // Adjust left eye rotation based on mouse or touch
+  if (leftEyeBone.current) {
+    leftEyeBone.current.rotation.y = THREE.MathUtils.lerp(
+      leftEyeBone.current.rotation.y,
+      x * 0.3, // Scale rotation
+      0.1 // Smoothing
+    );
+    leftEyeBone.current.rotation.x = THREE.MathUtils.lerp(
+      leftEyeBone.current.rotation.x,
+      y * 0.3, // Scale rotation
+      0.1 // Smoothing
+    );
+  }
+
+  // Adjust right eye rotation based on mouse or touch
+  if (rightEyeBone.current) {
+    rightEyeBone.current.rotation.y = THREE.MathUtils.lerp(
+      rightEyeBone.current.rotation.y,
+      x * 0.3, // Scale rotation
+      0.1 // Smoothing
+    );
+    rightEyeBone.current.rotation.x = THREE.MathUtils.lerp(
+      rightEyeBone.current.rotation.x,
+      y * 0.3, // Scale rotation
+      0.1 // Smoothing
+    );
+  }
+});
+// Track head or eye end
+
+
 
   return (
     <group
