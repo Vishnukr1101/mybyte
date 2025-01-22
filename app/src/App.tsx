@@ -11,7 +11,7 @@ function App() {
       <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden">
         <React.Suspense fallback={<LoadingScreen />}>
           <CanvasPage className="flex flex-1 min-h-screen min-w-screen overflow-hidden" viewMode={false} camera={{
-            cameraPosition: [4.978781363372452, 3.3009979963196088, -0.44574850745471184],
+            cameraPosition: [ 3.904339006736465, 2.8828155706914, -0.8869606241617844 ],
             orbitalTarget: [4.802197359669965, 3.268883557802778, -0.46309305884569685]
           }}
             avatar={{

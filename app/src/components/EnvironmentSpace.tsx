@@ -79,6 +79,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
     avatar,
     viewMode = false,
   } = props;
+  const { camera } = useThree();
 
   const background = "white_modern_living_room_4k.glb";
 
@@ -86,8 +87,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   const [visemeData, setVisemeData] = useState([]);
   const [isRoomReady, setIsRoomReady] = useState(false);
 
-
-  const { camera } = useThree();
+  const [isAvatarReady, setIsAvatarReady] = useState<boolean>(false);
 
   const controlsRef = useRef<ThreeOrbitControls | null>(null);
   // Save camera position and target to localStorage when controls change
@@ -95,11 +95,10 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
     if (controlsRef.current) {
       console.log("camera: ", camera.position.toArray())
       console.log("orbital: ", controlsRef.current.target.toArray())
-      // camera.position.toArray()
-      // controlsRef.current.target.toArray()
+      camera.position.toArray()
+      controlsRef.current.target.toArray()
     }
   };
-
 
   const getSpeechData = async (text: string) => {
     try {
@@ -114,7 +113,6 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
         if (response?.headers) {
           // Extract visemes from response headers
           const visemeData = response?.headers.get("x-viseme");
-
           const viseme = JSON.parse(visemeData || '');
           setVisemeData(viseme);
         }
@@ -151,7 +149,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   };
 
   useEffect(() => {
-    if (avatar?.speechText) {
+    if (avatar?.speechText && isAvatarReady) {
       getSpeechData(avatar?.speechText).then(response => {
         console.log("speech response: ", response)
       }).catch(error => {
@@ -159,12 +157,8 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
       })
     }
 
-    return () => {
-
-    }
-  }, [avatar?.speechText])
-
-
+    return () => { }
+  }, [avatar?.speechText, isAvatarReady])
 
   useEffect(() => {
     // restore camera & orbital target
@@ -182,14 +176,6 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
     }
   }, [sceneCameraPosition, camera.position]);
 
-  // useEffect(() => {
-  //   if (avatar?.speechText && avatar?.speechVoice && isAvatarReady) {
-  //     getSpeechData(avatar?.speechText, avatar?.speechVoice);
-  //   }
-
-  //   return () => { };
-  // }, [avatar?.speechText, avatar?.speechVoice, isAvatarReady]);
-
   const { gl, size } = useThree();
 
   useEffect(() => {
@@ -203,7 +189,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
 
-  const loader = useMemo(()=> new GLTFLoader(), []);
+  const loader = useMemo(() => new GLTFLoader(), []);
   loader.setDRACOLoader(dracoLoader);
 
   const [model, setModel] = useState<THREE.Group | null>(null);
@@ -224,7 +210,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   }, [background, loader]);
 
   const handleAvatarReady = () => {
-    // setIsAvatarReady(true);
+    setIsAvatarReady(true);
 
     if (props?.onReady) {
       props.onReady(true);
@@ -286,12 +272,16 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
         // maxPolarAngle={Math.PI / 2}
         // minAzimuthAngle={-(Math.PI / 2)}
         // maxAzimuthAngle={Math.PI / 2}
-        ref={(ref) => {
-          // Type assertion to access the underlying Three.js OrbitControls
-          if (ref && "current" in ref) {
-            controlsRef.current = ref.current as unknown as ThreeOrbitControls;
-          }
-        }}
+        // ref={(ref) => {
+
+        //   // Type assertion to access the underlying Three.js OrbitControls
+        //   if (ref && "current" in ref) {
+        //     controlsRef.current = ref.current as unknown as ThreeOrbitControls;
+        //   } else {
+        //     controlsRef.current = null
+        //   }
+        // }}
+        ref={controlsRef.current}
         enableDamping // Optional: Adds smooth damping to the controls
         enableZoom={!viewMode} // Disable zoom
         enablePan={!viewMode} // Disable pan

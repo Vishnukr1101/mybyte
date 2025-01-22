@@ -69,7 +69,6 @@ const Avatar = React.memo((props: Props) => {
   const { animations } = useGLTF(animationFile);
 
   const { actions } = useAnimations(animations, group);
-  console.log("animations: ", actions)
 
   useEffect(() => {
     if (actions && group?.current) {
