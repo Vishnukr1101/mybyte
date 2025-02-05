@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, LegacyRef } from "react";
 import {
   OrbitControls,
   useGLTF,
@@ -149,7 +149,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   };
 
   useEffect(() => {
-    if (avatar?.speechText && isAvatarReady) {
+    if (avatar?.speechText && avatar?.speechText.trim() && isAvatarReady) {
       getSpeechData(avatar?.speechText).then(response => {
         console.log("speech response: ", response)
       }).catch(error => {
@@ -268,20 +268,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
       <OrbitControls
         args={[camera]}
-        // minPolarAngle={0}
-        // maxPolarAngle={Math.PI / 2}
-        // minAzimuthAngle={-(Math.PI / 2)}
-        // maxAzimuthAngle={Math.PI / 2}
-        // ref={(ref) => {
-
-        //   // Type assertion to access the underlying Three.js OrbitControls
-        //   if (ref && "current" in ref) {
-        //     controlsRef.current = ref.current as unknown as ThreeOrbitControls;
-        //   } else {
-        //     controlsRef.current = null
-        //   }
-        // }}
-        ref={controlsRef.current}
+        ref={ref=> controlsRef.current = ref}
         enableDamping // Optional: Adds smooth damping to the controls
         enableZoom={!viewMode} // Disable zoom
         enablePan={!viewMode} // Disable pan

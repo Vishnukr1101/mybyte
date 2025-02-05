@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from "@material-tailwind/react";
 import LoadingScreen from './components/LoadingScreen';
+import SidePanel from './components/SidePanel';
 
 const CanvasPage = React.lazy(() => import("./components/CanvasPage"))
 
@@ -11,8 +12,8 @@ function App() {
       <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden">
         <React.Suspense fallback={<LoadingScreen />}>
           <CanvasPage className="flex flex-1 min-h-screen min-w-screen overflow-hidden" viewMode={false} camera={{
-            cameraPosition: [ 3.904339006736465, 2.8828155706914, -0.8869606241617844 ],
-            orbitalTarget: [4.802197359669965, 3.268883557802778, -0.46309305884569685]
+            cameraPosition: [5.002666692561189,3.303148383086136,-0.49805992094516843],
+            orbitalTarget: [4.802197359669965,3.268883557802778,-0.46309305884569685]
           }}
             avatar={{
               speechText: "Hello, How can I help you?",
@@ -43,6 +44,7 @@ function App() {
             }}
           />
         </React.Suspense>
+        <SidePanel />
       </div>
     </ThemeProvider>
   )
