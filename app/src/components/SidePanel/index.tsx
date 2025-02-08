@@ -11,7 +11,7 @@ type Props = {}
 
 const SidePanel = (props: Props) => {
     return (
-        <div className='absolute top-0 right-0 h-auto m-4 p-5 lg:max-w-[35%] overflow-auto bg-white rounded-lg shadow-xl' style={{ minHeight: "calc(100vh - 40px)", maxHeight: "calc(100vh - 40px)" }}>
+        <div className="absolute bottom-0 lg:top-0 right-0 h-[50vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto bg-white rounded-lg shadow-xl">
             <Summary />
             <Experience />
             <SkillSet />

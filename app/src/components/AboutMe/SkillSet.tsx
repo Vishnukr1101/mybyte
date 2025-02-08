@@ -78,11 +78,11 @@ const skillStack = {
 const SkillSet = (props: Props) => {
     return (
         <section id="skills">
-            <h2 className="text-black text-2xl font-bold my-8">My Skills</h2>
+            <h2 className="text-black text-xl lg:text-2xl font-bold my-8">My Skills</h2>
             <div className="flex flex-row flex-1 flex-wrap gap-2">
                 {skillStack.sections.map(item => (
                     <div className="bg-white p-6 rounded-lg shadow-lg min-w-full" key={item.name}>
-                        <h3 className="text-xl font-semibold text-gray-700 mb-4">{item.name}</h3>
+                        <h3 className="text-md lg:text-xl font-semibold text-gray-700 mb-4">{item.name}</h3>
                         <div className="space-y-4 flex flex-wrap flex-row gap-6 items-center">
                             {item.technologies.map(tech => (
                                 <img src={tech.icon} alt={tech.name} className="w-12" key={tech.name} />

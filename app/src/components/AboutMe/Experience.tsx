@@ -5,13 +5,13 @@ type Props = {}
 const Experience = (props: Props) => {
     return (
         <section className='flex flex-wrap flex-col mt-8' id="experience">
-            <h1 className='text-black text-2xl font-bold mb-2'>Experience</h1>
+            <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Experience</h1>
 
             <ul>
                 <li>
                     <div className='flex flex-row flex-1 my-4 justify-between items-start'>
                         <div className="row flex flex-1 flex-col">
-                            <h2 className='text-black text-lg'>Senior Software Engineer, <span className='text-xs'>
+                            <h2 className='text-black text-md lg:text-lg'>Senior Software Engineer, <span className='text-xs'>
                             </span></h2>
                             <a href="https://www.simelabs.com/" className="text-blue-800 text-sm" target="_blank" >Simelabs</a>
                         </div>
@@ -35,7 +35,7 @@ const Experience = (props: Props) => {
                 <li>
                     <div className='flex flex-row flex-1 my-4 justify-between items-start'>
                         <div className="row flex flex-1 flex-col">
-                            <h2 className='text-black text-lg'>Senior Software Engineer, <span className='text-xs'>
+                            <h2 className='text-black text-md lg:text-lg'>Senior Software Engineer, <span className='text-xs'>
                             </span></h2>
                             <a href="https://www.linkedin.com/company/recodeai" className="text-blue-800 text-sm" target="_blank">RecodeAI Solutions</a>
                         </div>
