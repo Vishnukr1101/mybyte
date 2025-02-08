@@ -1,8 +1,5 @@
-import React from 'react'
 
-type Props = {}
-
-const Summary = (props: Props) => {
+const Summary = () => {
     return (
         <section className='flex flex-wrap flex-col' id="summary">
             <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Summary</h1>

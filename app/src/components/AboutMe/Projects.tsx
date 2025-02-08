@@ -1,6 +1,3 @@
-import React from 'react'
-
-type Props = {}
 
 const list = [
     {
@@ -68,7 +65,7 @@ const list = [
 ]
 
 
-const Projects = (props: Props) => {
+const Projects = () => {
     return (
         <section className='flex flex-wrap flex-col mt-8' id="projects">
             <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Projects</h1>

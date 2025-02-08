@@ -1,8 +1,5 @@
-import React from 'react'
 
-type Props = {}
-
-const Experience = (props: Props) => {
+const Experience = () => {
     return (
         <section className='flex flex-wrap flex-col mt-8' id="experience">
             <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Experience</h1>

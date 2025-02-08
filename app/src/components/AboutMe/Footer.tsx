@@ -1,8 +1,5 @@
-import React from 'react'
 
-type Props = {}
-
-const Footer = (props: Props) => {
+const Footer = () => {
     return (
         <footer className='flex flex-1 flex-col'>
             <div className="border-t border-gray-300 my-4"></div>

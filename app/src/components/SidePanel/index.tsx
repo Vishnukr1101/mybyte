@@ -1,28 +1,29 @@
-import React from 'react'
-import Summary from '../AboutMe/Summary';
-import Experience from '../AboutMe/Experience';
-import SkillSet from '../AboutMe/SkillSet';
-import Projects from '../AboutMe/Projects';
-import Education from '../AboutMe/Education';
-import Certifications from '../AboutMe/Certifications';
-import Footer from '../AboutMe/Footer';
+import { lazy, Suspense, memo } from 'react';
 
-type Props = {}
+const Summary = lazy(() => import('../AboutMe/Summary'));
+const Experience = lazy(() => import('../AboutMe/Experience'));
+const SkillSet = lazy(() => import('../AboutMe/SkillSet'));
+const Projects = lazy(() => import('../AboutMe/Projects'));
+const Education = lazy(() => import('../AboutMe/Education'));
+const Certifications = lazy(() => import('../AboutMe/Certifications'));
+const Footer = lazy(() => import('../AboutMe/Footer'));
 
-const SidePanel = (props: Props) => {
+import LoadingScreen from '../../components/LoadingScreen';
+
+const SidePanel = () => {
     return (
         <div className="absolute bottom-0 lg:top-0 right-0 h-[50vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto bg-white rounded-lg shadow-xl">
-            <Summary />
-            <Experience />
-            <SkillSet />
-            <Projects />
-            <Education />
-            <Certifications />
-            <Footer />
+            <Suspense fallback={<LoadingScreen />}>
+                <Summary />
+                <Experience />
+                <SkillSet />
+                <Projects />
+                <Education />
+                <Certifications />
+                <Footer />
+            </Suspense>
         </div>
-    )
-}
+    );
+};
 
-
-
-export default SidePanel;
+export default memo(SidePanel);

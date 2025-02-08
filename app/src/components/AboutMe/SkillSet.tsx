@@ -1,6 +1,3 @@
-import React from 'react'
-
-type Props = {}
 
 const skillStack = {
     "sections": [
@@ -75,7 +72,7 @@ const skillStack = {
 }
 
 
-const SkillSet = (props: Props) => {
+const SkillSet = () => {
     return (
         <section id="skills">
             <h2 className="text-black text-xl lg:text-2xl font-bold my-8">My Skills</h2>

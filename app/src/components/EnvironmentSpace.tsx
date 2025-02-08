@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, LegacyRef } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
   OrbitControls,
   useGLTF,
@@ -13,7 +13,6 @@ import { degToRad } from "three/src/math/MathUtils.js";
 
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { OrbitControls as ThreeOrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // import { rooms } from "constants/room";
 
 type Props = {
@@ -89,7 +88,8 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
   const [isAvatarReady, setIsAvatarReady] = useState<boolean>(false);
 
-  const controlsRef = useRef<ThreeOrbitControls | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const controlsRef = useRef<any>(null);
   // Save camera position and target to localStorage when controls change
   const handleControlsChange = () => {
     if (controlsRef.current) {
@@ -268,12 +268,13 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
       <OrbitControls
         args={[camera]}
-        ref={ref=> controlsRef.current = ref}
-        enableDamping // Optional: Adds smooth damping to the controls
-        enableZoom={!viewMode} // Disable zoom
-        enablePan={!viewMode} // Disable pan
+        ref={(ref) => (controlsRef.current = ref)}
+        enableDamping
+        enableZoom={!viewMode}
+        enablePan={!viewMode}
         onEnd={handleControlsChange}
       />
+
       {isRoomReady && (
         <Avatar
           scale={avatar?.scale || 2}
