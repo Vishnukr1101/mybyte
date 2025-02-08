@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider } from "@material-tailwind/react";
 import LoadingScreen from './components/LoadingScreen';
 import SidePanel from './components/SidePanel';
@@ -41,15 +41,21 @@ const avatarData = {
 
 function App() {
 
+  const [isAvatarReady, setIsAvatarReady] = useState(false);
+  const handleAvatarReady = (value: boolean) => {
+    setIsAvatarReady(value)
+  }
+
   return (
     <ThemeProvider>
       <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden">
         <React.Suspense fallback={<LoadingScreen />}>
           <CanvasPage className="flex flex-1 min-h-screen min-w-screen overflow-hidden" viewMode={false} camera={camera}
             avatar={avatarData}
+            onReady={handleAvatarReady}
           />
         </React.Suspense>
-        <SidePanel />
+        {isAvatarReady && <SidePanel />}
       </div>
     </ThemeProvider>
   )

@@ -62,7 +62,7 @@ type Props = {
     };
   };
   viewMode?: boolean;
-  onReady?: (value: boolean) => void;
+  onReady: (value: boolean) => void;
 };
 
 const morphTargets =
@@ -211,10 +211,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
   const handleAvatarReady = () => {
     setIsAvatarReady(true);
-
-    if (props?.onReady) {
-      props.onReady(true);
-    }
+    props.onReady(true);
   };
 
   return (
