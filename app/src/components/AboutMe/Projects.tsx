@@ -75,7 +75,7 @@ const Projects = (props: Props) => {
 
             <ul>
                 {list.map(item => (
-                    <li>
+                    <li key={item.title}>
                         <div className='flex flex-row flex-1 my-4 justify-between items-start'>
                             <div className="row flex flex-1 flex-col">
                                 <h2 className='text-black text-md'>{item.title}</h2>

@@ -3,6 +3,9 @@ import Summary from '../AboutMe/Summary';
 import Experience from '../AboutMe/Experience';
 import SkillSet from '../AboutMe/SkillSet';
 import Projects from '../AboutMe/Projects';
+import Education from '../AboutMe/Education';
+import Certifications from '../AboutMe/Certifications';
+import Footer from '../AboutMe/Footer';
 
 type Props = {}
 
@@ -13,6 +16,9 @@ const SidePanel = (props: Props) => {
             <Experience />
             <SkillSet />
             <Projects />
+            <Education />
+            <Certifications />
+            <Footer />
         </div>
     )
 }
