@@ -33,7 +33,7 @@ const Experience = (props: Props) => {
                     </ul>
                 </li>
                 <li>
-                <div className='flex flex-row flex-1 my-4 justify-between items-start'>
+                    <div className='flex flex-row flex-1 my-4 justify-between items-start'>
                         <div className="row flex flex-1 flex-col">
                             <h2 className='text-black text-lg'>Senior Software Engineer, <span className='text-xs'>
                             </span></h2>
@@ -59,7 +59,7 @@ const Experience = (props: Props) => {
                     </ul>
                 </li>
             </ul>
-        </section >
+        </section>
     )
 }
 
