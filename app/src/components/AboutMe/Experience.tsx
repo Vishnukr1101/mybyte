@@ -5,7 +5,7 @@ type Props = {}
 const Experience = (props: Props) => {
     return (
         <section className='flex flex-wrap flex-col mt-8' id="experience">
-            <h1 className='text-black text-xl font-bold mb-2'>Experience</h1>
+            <h1 className='text-black text-2xl font-bold mb-2'>Experience</h1>
 
             <ul>
                 <li>

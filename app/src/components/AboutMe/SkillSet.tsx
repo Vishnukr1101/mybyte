@@ -2,106 +2,95 @@ import React from 'react'
 
 type Props = {}
 
+const skillStack = {
+    "sections": [
+        {
+            "name": "Frontend",
+            "technologies": [
+                { "name": "React", "icon": "/assets/icons/reactjs.svg" },
+                { "name": "TypeScript", "icon": "/assets/icons/typescript.svg" },
+                { "name": "Next.js", "icon": "/assets/icons/nextjs.svg" },
+                { "name": "Vite", "icon": "/assets/icons/vitejs.svg" },
+                { "name": "Three.js", "icon": "/assets/icons/threejs.svg" },
+                { "name": "Redux", "icon": "/assets/icons/redux.svg" },
+                { "name": "Recoil", "icon": "https://recoiljs.org/img/logo.svg" },
+                { "name": "React Flow", "icon": "/assets/icons/react-flow.svg" },
+                { "name": "TailwindCSS", "icon": "/assets/icons/tailwindcss.svg" },
+                { "name": "SASS", "icon": "/assets/icons/sass.svg" },
+                { "name": "CSS3", "icon": "/assets/icons/css3.svg" },
+                { "name": "HTML5", "icon": "/assets/icons/html5.svg" }
+            ]
+        },
+        {
+            "name": "Backend",
+            "technologies": [
+                { "name": "Node.js", "icon": "/assets/icons/nodejs.svg" },
+                { "name": "Express.js", "icon": "/assets/icons/expressjs-dark.svg" },
+                { "name": "Python", "icon": "/assets/icons/python.svg" },
+                { "name": "Flask API", "icon": "/assets/icons/flask-dark.svg" },
+                { "name": "Firebase", "icon": "/assets/icons/firebase.svg" },
+                { "name": "Socket.io", "icon": "https://socket.io/images/logo.svg" }
+            ]
+        },
+        {
+            "name": "Databases",
+            "technologies": [
+                { "name": "MongoDB", "icon": "/assets/icons/mongodb.svg" },
+                { "name": "Redis", "icon": "/assets/icons/redis.svg" },
+                { "name": "MySQL", "icon": "/assets/icons/mysql.svg" },
+                { "name": "Firebase", "icon": "/assets/icons/firebase.svg" }
+            ]
+        },
+        {
+            "name": "Native Apps",
+            "technologies": [
+                { "name": "React Native", "icon": "/assets/icons/reactjs.svg" },
+                { "name": "Firebase", "icon": "/assets/icons/firebase.svg" }
+            ]
+        },
+        {
+            "name": "AI Integration",
+            "technologies": [
+                { "name": "OpenAI", "icon": "/assets/icons/openai.svg" }
+            ]
+        },
+        {
+            "name": "DevOps & Tools",
+            "technologies": [
+                { "name": "Docker", "icon": "/assets/icons/docker.svg" },
+                { "name": "Kubernetes", "icon": "/assets/icons/kubernetes.svg" },
+                { "name": "Git", "icon": "/assets/icons/git.svg" },
+                { "name": "GitHub", "icon": "/assets/icons/github-dark.svg" }
+            ]
+        },
+        {
+            "name": "Cloud",
+            "technologies": [
+                { "name": "Google Cloud", "icon": "/assets/icons/google-cloud.svg" },
+                { "name": "AWS", "icon": "/assets/icons/aws.svg" },
+                { "name": "Azure", "icon": "/assets/icons/azure.svg" }
+            ]
+        }
+    ]
+}
+
+
 const SkillSet = (props: Props) => {
     return (
         <section id="skills">
-            <div className="bg-gray-50 p-8">
-                <div className="mx-auto">
-                    <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">My Skills</h2>
-
-                    <div className="flex flex-row flex-1 flex-wrap gap-2">
-
-                        {/*  Frontend */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg min-w-60">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">Frontend</h3>
-                            <div className="space-y-4 flex flex-wrap flex-row gap-6 items-center">
-                                <img src="/assets/icons/reactjs.svg" alt="React" className="w-12" />
-                                <img src="/assets/icons/typescript.svg" alt="TypeScript" className="w-12" />
-                                <img src="/assets/icons/nextjs.svg" alt="Next.js" className="w-12" />
-                                <img src="/assets/icons/vitejs.svg" alt="Vite" className="w-12" />
-                                <img src="/assets/icons/threejs.svg" alt="TypeScript" className="w-12" />
-                                <img src="/assets/icons/redux.svg" alt="Redux" className="w-12" />
-                                <img src="https://recoiljs.org/img/logo.svg" alt="Recoil" className="w-12" />
-                                <img src="/assets/icons/react-flow.svg" alt="React Flow" className="w-12" />
-                                <img src="/assets/icons/tailwindcss.svg" alt="TailwindCSS" className="w-12" />
-                                <img src="/assets/icons/sass.svg" alt="SASS" className="w-12" />
-                                <img src="/assets/icons/css3.svg" alt="TypeScript" className="w-12" />
-                                <img src="/assets/icons/html5.svg" alt="TypeScript" className="w-12" />
-                            </div>
+            <h2 className="text-black text-2xl font-bold my-8">My Skills</h2>
+            <div className="flex flex-row flex-1 flex-wrap gap-2">
+                {skillStack.sections.map(item => (
+                    <div className="bg-white p-6 rounded-lg shadow-lg min-w-full" key={item.name}>
+                        <h3 className="text-xl font-semibold text-gray-700 mb-4">{item.name}</h3>
+                        <div className="space-y-4 flex flex-wrap flex-row gap-6 items-center">
+                            {item.technologies.map(tech => (
+                                <img src={tech.icon} alt={tech.name} className="w-12" key={tech.name} />
+                            ))}
                         </div>
-
-
-                        {/*  Backend */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">Backend</h3>
-                            <div className="space-y-4">
-                                <img src="/assets/icons/nodejs.svg" alt="Node.js" className="w-12" />
-                                <img src="/assets/icons/expressjs-dark.svg" alt="Express.js" className="w-12" />
-                                <img src="/assets/icons/python.svg" alt="Python" className="w-12" />
-                                <img src="/assets/icons/flask-dark.svg" alt="Flask API" className="w-12" />
-                                <img src="/assets/icons/firebase.svg" alt="Flask API" className="w-12" />
-                                <img src="https://socket.io/images/logo.svg" alt="Socket.io" className="w-12" />
-                            </div>
-                        </div>
-
-                        {/*  Databases */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">Databases</h3>
-                            <div className="space-y-4">
-                                <img src="/assets/icons/mongodb.svg" alt="MongoDB" className="w-12" />
-                                <img src="/assets/icons/redis.svg" alt="Redis" className="w-12" />
-                                <img src="/assets/icons/mysql.svg" alt="MySQL" className="w-12" />
-                                <img src="/assets/icons/firebase.svg" alt="Firebase" className="w-12" />
-                            </div>
-                        </div>
-
-                        {/*  Mobile Development */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">Native Apps</h3>
-                            <div className="space-y-4">
-                                <img src="/assets/icons/reactjs.svg" alt="React Native" className="w-12" />
-                                <img src="/assets/icons/firebase.svg" alt="Firebase" className="w-12" />
-                            </div>
-                        </div>
-
-
-
-
-                        {/*  AI Integration */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">AI Integration</h3>
-                            <div className="space-y-4">
-                                <img src="/assets/icons/openai.svg" alt="OpenAI" className="w-12" />
-                            </div>
-                        </div>
-
-
-                        {/*  DevOps & Version Control Tools */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">DevOps & Tools</h3>
-                            <div className="space-y-4">
-                                <img src="/assets/icons/docker.svg" alt="Docker" className="w-12" />
-                                <img src="/assets/icons/kubernetes.svg" alt="Kubernetes" className="w-12" />
-                                <img src="/assets/icons/git.svg" alt="Git" className="w-12" />
-                                <img src="/assets/icons/github-dark.svg" alt="GitHub" className="w-12" />
-                            </div>
-                        </div>
-
-                        {/*  Cloud */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                            <h3 className="text-xl font-semibold text-gray-700 mb-4">Cloud</h3>
-                            <div className="space-y-4">
-                                <img src="/assets/icons/google-cloud.svg" alt="Google Cloud" className="w-12" />
-                                <img src="/assets/icons/aws.svg" alt="AWS" className="w-12" />
-                                <img src="/assets/icons/azure.svg" alt="Azure" className="w-12" />
-                            </div>
-                        </div>
-
-
                     </div>
-                </div>
+                ))}
             </div>
-
         </section>
     )
 }
