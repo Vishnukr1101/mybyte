@@ -8,14 +8,14 @@ const Certifications = () => {
             </p>
             <div className="flex flex-1 flex-row flex-wrap items-center justify-center">
 
-                <p className="text-md leading-5 my-4 text-center">
-                    <a href="https://www.hackerrank.com/certificates/c27f28e07ea8" className='text-center'>
+                <p className="text-md leading-5 my-4 text-center hover:text-blue-500 hover:underline">
+                    <a href="https://www.hackerrank.com/certificates/c27f28e07ea8" className='text-center' target='_blank'>
                         <img src="/assets/certificates/frontend-developer.png" className='w-60' alt="Frontend Developer" />
                         Frontend Developer (React) Certificate
                     </a>
                 </p>
-                <p className="text-md leading-5 text-center my-4">
-                    <a href="https://www.hackerrank.com/certificates/76deb2d15dca" className='text-center'>
+                <p className="text-md leading-5 text-center my-4 hover:text-blue-500 hover:underline">
+                    <a href="https://www.hackerrank.com/certificates/76deb2d15dca" className='text-center' target='_blank'>
                         <img src="/assets/certificates/react.png" className='w-60' alt="React" />
                         React (Basic) Certificate
                     </a>

@@ -37,6 +37,38 @@ type Props = {
   isMuted?: boolean;
 }
 
+const gestures = [
+  "acknowledging",
+  "angry_gesture",
+  "angry_point",
+  "annoyed_head_shake",
+  "being_cocky",
+  "disappointed",
+  "dismissing_gesture",
+  "happy_hand_gesture",
+  "happy_idle",
+  "hard_head_nod",
+  "head_nod_yes",
+  "idle",
+  "lengthy_head_nod",
+  "look_away_gesture",
+  "pointing",
+  "pointing_1_",
+  "quick_formal_bow",
+  "relieved_sigh",
+  "salute",
+  "sarcastic_head_nod",
+  "shaking_head_no",
+  "talking",
+  "talking_1_",
+  "thoughtful_head_shake",
+  "walking",
+  "waving",
+  "waving_1_",
+  "weight_shift"
+];
+
+
 const Avatar = React.memo((props: Props) => {
   const group = useRef();
 
@@ -53,7 +85,7 @@ const Avatar = React.memo((props: Props) => {
 
   const visemeData = props?.visemeData;
   const [animate, setAnimate] = useState(defaultAnimation);
-  const {isAvatarReady, setIsAvatarReady} = useContext(AvatarContext);
+  const { isAvatarReady, setIsAvatarReady } = useContext(AvatarContext);
   const { load, getPosition, playing, stop, mute } = useGlobalAudioPlayer();
   const lastBlinkTime = useRef(0);
   const { nodes, materials } = useGLTF(props.url);
@@ -68,7 +100,7 @@ const Avatar = React.memo((props: Props) => {
       setIsAvatarReady(true);
     }
 
-    return () => {};
+    return () => { };
   }, [actions, group, props]);
 
   useEffect(() => {
@@ -312,6 +344,35 @@ const Avatar = React.memo((props: Props) => {
     }
   });
   // Track head or eye end
+
+
+  // random gestures 
+  // const [gesture, setGesture] = useState<string>(() => gestures[Math.floor(Math.random() * gestures.length)]);
+
+  // // Function to select a random gesture
+  // const getRandomGesture = React.useCallback(() => {
+  //   let newGesture;
+  //   do {
+  //     newGesture = gestures[Math.floor(Math.random() * gestures.length)];
+  //   } while (newGesture === gesture); // Avoid repeating the current gesture
+  //   return newGesture;
+  // }, [gesture]);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setGesture(getRandomGesture);
+  //   }, 5000);
+
+  //   return () => clearInterval(interval);
+  // }, [getRandomGesture]);
+
+  // useEffect(() => {
+  //   setAnimate(gesture)
+
+  //   return () => {
+
+  //   }
+  // }, [gesture])
 
 
 
