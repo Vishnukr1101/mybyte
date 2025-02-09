@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
 import {
   OrbitControls,
   useGLTF,
@@ -62,7 +62,6 @@ type Props = {
     };
   };
   viewMode?: boolean;
-  onReady: (value: boolean) => void;
 };
 
 const morphTargets =
@@ -71,6 +70,7 @@ const morphTargets =
 const avatarUrl = `https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?useQuantizeMeshOptCompression=true&quality=high&textureQuality=high&morphTargets=${morphTargets}&pose=A`;
 
 import { getSpeech } from "../api/speech";
+import AvatarContext from "../hooks/AvatarContext";
 
 const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   const {
@@ -85,8 +85,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   const [audioUrl, setAudioUrl] = useState("");
   const [visemeData, setVisemeData] = useState([]);
   const [isRoomReady, setIsRoomReady] = useState(false);
-
-  const [isAvatarReady, setIsAvatarReady] = useState<boolean>(false);
+  const {isAvatarReady} = useContext(AvatarContext);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
@@ -209,11 +208,6 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
     );
   }, [background, loader]);
 
-  const handleAvatarReady = () => {
-    setIsAvatarReady(true);
-    props.onReady(true);
-  };
-
   return (
     <>
       <color attach="background" args={["#212121"]} />
@@ -280,7 +274,6 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
           url={avatarUrl}
           position={avatar?.position}
           rotate={avatar?.rotate}
-          onReady={handleAvatarReady}
         />
       )}
 

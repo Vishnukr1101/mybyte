@@ -50,7 +50,6 @@ type Props = {
   };
   viewMode: boolean;
   style?: StyleSheet;
-  onReady: (value: boolean) => void;
   hidden?: boolean;
 };
 

@@ -1,7 +1,7 @@
 
 const Certifications = () => {
     return (
-        <section className='flex flex-wrap flex-col' id="certifications">
+        <section className='flex flex-wrap flex-col mt-8' id="certifications">
             <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Awards & Certifications</h1>
             <p className="text-md leading-5 text-justify my-4">
                 🎗️Proficiency Award - 2016, From Department of Computer Science, Al-Azhar College of Arts & Science

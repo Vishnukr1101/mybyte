@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 // https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?useQuantizeMeshOptCompression=true&quality=high&textureQuality=high&morphTargets=ARKit,Oculus Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&pose=A
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -10,6 +10,7 @@ import { useGlobalAudioPlayer } from "react-use-audio-player";
 import { visemeMap } from "../utils";
 
 import { randInt } from "three/src/math/MathUtils.js";
+import AvatarContext from "../hooks/AvatarContext";
 
 
 const morphTargetSmoothing = 0.08;
@@ -31,7 +32,6 @@ type Props = {
     z: number;
   },
   visemeData?: object[];
-  onReady?: (value: boolean) => void;
   onPlayStateChange?: (value: boolean) => void;
   audioUrl?: string;
   isMuted?: boolean;
@@ -53,16 +53,9 @@ const Avatar = React.memo((props: Props) => {
 
   const visemeData = props?.visemeData;
   const [animate, setAnimate] = useState(defaultAnimation);
-  const [isAvatarReady, setIsAvatarReady] = useState(false);
+  const {isAvatarReady, setIsAvatarReady} = useContext(AvatarContext);
   const { load, getPosition, playing, stop, mute } = useGlobalAudioPlayer();
   const lastBlinkTime = useRef(0);
-
-  useEffect(() => {
-    setAnimate(defaultAnimation);
-    return () => { };
-  }, []);
-
-
   const { nodes, materials } = useGLTF(props.url);
 
   const animationFile = `/combined.glb`;
@@ -73,10 +66,9 @@ const Avatar = React.memo((props: Props) => {
   useEffect(() => {
     if (actions && group?.current) {
       setIsAvatarReady(true);
-      props.onReady(true);
     }
 
-    return () => { };
+    return () => {};
   }, [actions, group, props]);
 
   useEffect(() => {

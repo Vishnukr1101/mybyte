@@ -12,7 +12,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 
 const SidePanel = () => {
     return (
-        <div className="absolute bottom-0 lg:top-0 right-0 h-[50vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto bg-white rounded-lg shadow-xl">
+        <div className="absolute bottom-0 lg:top-0 right-0 h-[50vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto scroll-smooth bg-white rounded-lg shadow-xl">
             <Suspense fallback={<LoadingScreen />}>
                 <Summary />
                 <Experience />

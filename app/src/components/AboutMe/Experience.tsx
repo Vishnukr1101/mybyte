@@ -32,7 +32,7 @@ const Experience = () => {
                 <li>
                     <div className='flex flex-row flex-1 my-4 justify-between items-start'>
                         <div className="row flex flex-1 flex-col">
-                            <h2 className='text-black text-md lg:text-lg'>Senior Software Engineer, <span className='text-xs'>
+                            <h2 className='text-black text-md lg:text-lg'>Senior Software Developer, <span className='text-xs'>
                             </span></h2>
                             <a href="https://www.linkedin.com/company/recodeai" className="text-blue-800 text-sm" target="_blank">RecodeAI Solutions</a>
                         </div>
