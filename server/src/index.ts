@@ -9,6 +9,8 @@ configDotenv();
 import winston from "winston";
 import { getSpeechSynthesis } from "./helpers/aws-polly";
 
+import { audioFileStream, helloViseme } from "./static/hello";
+
 const log = winston.createLogger({
   level: "info",
   format: winston.format.json(),
@@ -41,39 +43,64 @@ interface SpeechRequestBody {
   text: string;
 }
 
-app.post(
-  "/speech",
-  async (
-    req: Request<{}, {}, SpeechRequestBody>,
-    res: Response
-  ): Promise<void> => {
-    const { text } = req.body;
+// app.post(
+//   "/speech",
+//   async (
+//     req: Request<{}, {}, SpeechRequestBody>,
+//     res: Response
+//   ): Promise<void> => {
+//     const { text } = req.body;
 
-    logger("input text: ", text);
+//     logger("input text: ", text);
 
-    if (!text) {
-      res.status(400).json({
-        message: "'text' parameter required",
-        error: "Bad request",
-      });
-      return;
-    }
-    try {
-      const { audioStream, viseme } = await getSpeechSynthesis(text);
-      // 3. Set viseme markers as custom headers
-      const visemeData = JSON.stringify(viseme);
+//     if (!text) {
+//       res.status(400).json({
+//         message: "'text' parameter required",
+//         error: "Bad request",
+//       });
+//       return;
+//     }
+//     try {
+//       const { audioStream, viseme } = await getSpeechSynthesis(text);
+//       // 3. Set viseme markers as custom headers
+//       const visemeData = JSON.stringify(viseme);
+//       res.setHeader("x-viseme", visemeData);
+//       // 4. Stream the audio as the response body
+//       res.setHeader("Content-Type", "audio/mpeg");
+//       audioStream.pipe(res);
+//     } catch (error: any) {
+//       res.status(500).json({
+//         message: "Internal Server Error",
+//         error: error.message,
+//       });
+//     }
+//   }
+// );
+
+app.post("/speech", async(req: Request, res: Response) => {
+ try {
+   const visemeData = JSON.stringify(helloViseme);
       res.setHeader("x-viseme", visemeData);
       // 4. Stream the audio as the response body
       res.setHeader("Content-Type", "audio/mpeg");
-      audioStream.pipe(res);
+
+      audioFileStream.on('error' , (error) => {
+        res.status(500).json({
+          message: "Internal Server Error, Stream broken",
+          error: error.message,
+        });
+      })
+
+      audioFileStream.pipe(res);
+
     } catch (error: any) {
       res.status(500).json({
         message: "Internal Server Error",
         error: error.message,
       });
     }
-  }
-);
+
+});
 
 // error handler middleware
 app.use((err: any, req: Request, res: Response, next: Function) => {

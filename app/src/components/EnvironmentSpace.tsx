@@ -140,6 +140,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
           // Create a Blob from the buffer
           const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
           const audioBlobUrl = URL.createObjectURL(audioBlob);
+          console.log("audio url : ", audioBlobUrl)
           setAudioUrl(audioBlobUrl);
         }
       }

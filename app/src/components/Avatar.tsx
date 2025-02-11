@@ -168,15 +168,20 @@ const Avatar = React.memo((props: Props) => {
     lerpMorphTarget("mouthSmileLeft", 0.2, 0.5);
 
     // Talking
-    for (let i = 0; i <= 21; i++) {
-      lerpMorphTarget(i, 0, 0.1); // reset morph targets
-    }
+    // for (let i = 0; i <= 21; i++) {
+    //   lerpMorphTarget(i, 0, 0.1); // reset morph targets
+    // }
 
+    
     if (isAvatarReady && visemeData && playing) {
-      for (let i = visemeData.length - 1; i >= 0; i--) {
+      console.log("check frame loop: ", isAvatarReady && visemeData && playing, " viseme : ", visemeData)
+      for (let i = 0; i <= visemeData.length - 1; i++) {
         const viseme = visemeData[i];
-        if (getPosition() * 1000 >= viseme[0]) {
-          lerpMorphTarget(viseme[1], 1, 0.2);
+
+        console.log("time: ", getPosition() *1000, " viseme time: ", viseme.time)
+
+        if (getPosition() * 1000 >= viseme.time) {
+          lerpMorphTarget(viseme.value, 1, 0.2);
           break;
         }
       }

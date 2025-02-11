@@ -3,30 +3,70 @@ export interface VisemeMapType {
 }
 
 // mapping from Microsoft viseme IDs to custom viseme IDs
-export const visemeMap: VisemeMapType = {
-  0: "viseme_sil", // Silence
-  1: "viseme_PP", // p, b, m
-  2: "viseme_PP", // p, b, m
-  3: "viseme_FF", // f, v
-  4: "viseme_I", // ih, ix
-  5: "viseme_E", // eh
-  6: "viseme_SS", // s, z
-  7: "viseme_AA", // ae
-  8: "viseme_AA", // aa
-  9: "viseme_AA", // ah
-  10: "viseme_O", // ao
-  11: "viseme_E", // ey
-  12: "viseme_U", // aw
-  13: "viseme_U", // ow
-  14: "viseme_U", // uh
-  15: "viseme_U", // uw
-  16: "viseme_I", // er
-  17: "viseme_I", // ax
-  18: "viseme_CH", // ch, jh
-  19: "viseme_DD", // dh, t, d
-  20: "viseme_nn", // n, l
-  21: "viseme_RR", // r
-  22: "viseme_TH", // th
+export const visemeMap: { [phoneme: string]: string } = {
+  // Silence
+  sil: "viseme_sil",
+  // Stops and Nasals
+  p: "viseme_PP",
+  b: "viseme_PP",
+  m: "viseme_PP",
+  t: "viseme_DD",
+  d: "viseme_DD",
+  n: "viseme_nn",
+  k: "viseme_DD",
+  g: "viseme_DD",
+  ng: "viseme_nn",
+
+  // Labio-dentals
+  f: "viseme_FF",
+  v: "viseme_FF",
+
+  // Interdentals
+  th: "viseme_TH",
+  dh: "viseme_DD",
+
+  // Fricatives
+  s: "viseme_SS",
+  z: "viseme_SS",
+  sh: "viseme_SS",
+  zh: "viseme_SS",
+
+  // Affricates
+  ch: "viseme_CH",
+  jh: "viseme_CH",
+
+  // Approximants
+  l: "viseme_nn",
+  r: "viseme_RR",
+  w: "viseme_U",
+  y: "viseme_E",
+
+  // Back Vowels
+  aa: "viseme_AA",
+  ah: "viseme_AA",
+  ao: "viseme_O",
+  uh: "viseme_U",
+  uw: "viseme_U",
+
+  // Front Vowels
+  ih: "viseme_I",
+  ix: "viseme_I",
+  eh: "viseme_E",
+  ey: "viseme_E",
+  ae: "viseme_AA",
+
+  // Rounded Vowels
+  ow: "viseme_U",
+  aw: "viseme_U",
+  oy: "viseme_U",
+  ay: "viseme_AA",
+
+  // Mid and Central Vowels
+  er: "viseme_I",
+  ax: "viseme_I",
+  // uh: "viseme_U",
+  // Miscellaneous
+  h: "viseme_SS",
 };
 
 export const animationActions = [
