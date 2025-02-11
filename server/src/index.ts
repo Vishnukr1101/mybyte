@@ -26,7 +26,12 @@ interface Item {
 const items: Item[] = [];
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.WEB_URL,
+    exposedHeaders: ["x-viseme"],
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Hello, TypeScript with Express!");
@@ -44,6 +49,8 @@ app.post(
   ): Promise<void> => {
     const { text } = req.body;
 
+    logger("input text: ", text);
+
     if (!text) {
       res.status(400).json({
         message: "'text' parameter required",
@@ -54,13 +61,11 @@ app.post(
     try {
       const { audioStream, viseme } = await getSpeechSynthesis(text);
       // 3. Set viseme markers as custom headers
-      res.setHeader("x-viseme", JSON.stringify(viseme));
-
+      const visemeData = JSON.stringify(viseme);
+      res.setHeader("x-viseme", visemeData);
       // 4. Stream the audio as the response body
       res.setHeader("Content-Type", "audio/mpeg");
       audioStream.pipe(res);
-
-      // res.status(200).send("Speech synthesis completed");
     } catch (error: any) {
       res.status(500).json({
         message: "Internal Server Error",
@@ -75,7 +80,6 @@ app.use((err: any, req: Request, res: Response, next: Function) => {
   logger(err.stack);
   res.status(500).send("Something broke!");
 });
-
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (error) => {

@@ -85,7 +85,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   const [audioUrl, setAudioUrl] = useState("");
   const [visemeData, setVisemeData] = useState([]);
   const [isRoomReady, setIsRoomReady] = useState(false);
-  const {isAvatarReady} = useContext(AvatarContext);
+  const { isAvatarReady } = useContext(AvatarContext);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
@@ -109,11 +109,13 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
       });
 
       if (response) {
-        if (response?.headers) {
+        if (response.headers) {
           // Extract visemes from response headers
-          const visemeData = response?.headers.get("x-viseme");
-          const viseme = JSON.parse(visemeData || '');
-          setVisemeData(viseme);
+          const visemeData = response.headers.get("x-viseme");
+          if (visemeData) {
+            const viseme = JSON.parse(visemeData || '');
+            setVisemeData(viseme);
+          }
         }
 
         if (response.body) {
@@ -137,9 +139,8 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
           // Create a Blob from the buffer
           const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
-          const audio = URL.createObjectURL(audioBlob);
-
-          setAudioUrl(audio);
+          const audioBlobUrl = URL.createObjectURL(audioBlob);
+          setAudioUrl(audioBlobUrl);
         }
       }
     } catch (error) {
@@ -149,9 +150,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
   useEffect(() => {
     if (avatar?.speechText && avatar?.speechText.trim() && isAvatarReady) {
-      getSpeechData(avatar?.speechText).then(response => {
-        console.log("speech response: ", response)
-      }).catch(error => {
+      getSpeechData(avatar?.speechText).catch(error => {
         console.log("Failed to get speech : ", error)
       })
     }
