@@ -1,3 +1,4 @@
+import { useSectionRefs } from "../SidePanel/SectionRefsContext";
 
 const skillStack = {
     "sections": [
@@ -73,8 +74,9 @@ const skillStack = {
 
 
 const SkillSet = () => {
+    const { skillRef } = useSectionRefs();
     return (
-        <section id="skills">
+        <section id="skills" ref={skillRef}>
             <h2 className="text-black text-xl lg:text-2xl font-bold my-8">My Skills</h2>
             <div className="flex flex-row flex-1 flex-wrap gap-2">
                 {skillStack.sections.map(item => (

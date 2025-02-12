@@ -1,4 +1,4 @@
-import { lazy, Suspense, memo } from 'react';
+import { lazy, Suspense, memo, useRef } from 'react';
 
 const Summary = lazy(() => import('../AboutMe/Summary'));
 const Experience = lazy(() => import('../AboutMe/Experience'));
@@ -8,21 +8,31 @@ const Education = lazy(() => import('../AboutMe/Education'));
 const Certifications = lazy(() => import('../AboutMe/Certifications'));
 const Footer = lazy(() => import('../AboutMe/Footer'));
 
+import { SectionRefsProvider } from "./SectionRefsContext";
+
 import LoadingScreen from '../../components/LoadingScreen';
+import NavigationMenu from './NavigationMenu';
 
 const SidePanel = () => {
+
     return (
-        <div className="absolute bottom-0 lg:top-0 right-0 h-[50vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto scroll-smooth bg-white rounded-lg shadow-xl">
-            <Suspense fallback={<LoadingScreen />}>
-                <Summary />
-                <Experience />
-                <SkillSet />
-                <Projects />
-                <Education />
-                <Certifications />
-                <Footer />
-            </Suspense>
-        </div>
+        <>
+            <SectionRefsProvider>
+                <div className="absolute bottom-0 lg:top-0 right-0 h-[44vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto scroll-smooth bg-white rounded-lg shadow-xl">
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Summary />
+                        <Experience />
+                        <SkillSet />
+                        <Projects />
+                        <Education />
+                        <Certifications />
+                        <Footer />
+                    </Suspense>
+                </div>
+                <NavigationMenu />
+
+            </SectionRefsProvider>
+        </>
     );
 };
 

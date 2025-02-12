@@ -1,7 +1,10 @@
+import { useSectionRefs } from "../SidePanel/SectionRefsContext";
 
 const Summary = () => {
+    const { summaryRef } = useSectionRefs();
+
     return (
-        <section className='flex flex-wrap flex-col' id="summary">
+        <section className='flex flex-wrap flex-col' id="summary" ref={summaryRef}>
             <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>About Me</h1>
             <p className="text-gray-600 text-sm leading-5 text-justify">
                 Full Stack Developer with 6+ years of experience in designing and implementing user-focused web

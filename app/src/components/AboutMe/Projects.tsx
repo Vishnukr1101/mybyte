@@ -1,3 +1,4 @@
+import { useSectionRefs } from "../SidePanel/SectionRefsContext";
 
 const list = [
     {
@@ -66,8 +67,10 @@ const list = [
 
 
 const Projects = () => {
+    const { projectRef } = useSectionRefs();
+
     return (
-        <section className='flex flex-wrap flex-col mt-8' id="projects">
+        <section className='flex flex-wrap flex-col mt-8' id="projects" ref={projectRef}>
             <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Projects</h1>
 
             <ul>
