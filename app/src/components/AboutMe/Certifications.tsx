@@ -20,6 +20,12 @@ const Certifications = () => {
                         React (Basic) Certificate
                     </a>
                 </p>
+                <p className="text-md leading-5 text-center my-4 hover:text-blue-500 hover:underline">
+                    <a href="https://www.hackerrank.com/certificates/36ddcab956cb" className='text-center' target='_blank'>
+                        <img src="/assets/certificates/node.png" className='w-60' alt="React" />
+                        Node (Basic) Certificate
+                    </a>
+                </p>
             </div>
         </section>
     )
