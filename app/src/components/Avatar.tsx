@@ -31,9 +31,8 @@ type Props = {
     y: number;
     z: number;
   },
-  visemeData?: object[];
   onPlayStateChange?: (value: boolean) => void;
-  audioUrl?: string;
+
   isMuted?: boolean;
 }
 
@@ -72,6 +71,9 @@ const gestures = [
 const Avatar = React.memo((props: Props) => {
   const group = useRef();
 
+  const { isAvatarReady, setIsAvatarReady, audioUrl, visemeData } = useContext(AvatarContext);
+
+
   const avatarScale = useMemo(() => props.scale || 2, [props.scale]);
   const avatarPosition = useMemo(
     () =>
@@ -83,9 +85,7 @@ const Avatar = React.memo((props: Props) => {
     [props.position],
   );
 
-  const visemeData = props?.visemeData;
   const [animate, setAnimate] = useState(defaultAnimation);
-  const { isAvatarReady, setIsAvatarReady } = useContext(AvatarContext);
   const { load, getPosition, playing, stop, mute } = useGlobalAudioPlayer();
   const lastBlinkTime = useRef(0);
   const { nodes, materials } = useGLTF(props.url);
@@ -105,8 +105,8 @@ const Avatar = React.memo((props: Props) => {
 
   useEffect(() => {
     stop();
-    if (props?.audioUrl) {
-      load(props?.audioUrl, {
+    if (audioUrl) {
+      load(audioUrl, {
         autoplay: true,
         onend: handleAudioEnd,
         format: "mp3",
@@ -115,7 +115,7 @@ const Avatar = React.memo((props: Props) => {
 
     return () => { };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [load, props?.audioUrl, stop]);
+  }, [load, audioUrl, stop]);
 
   useFrame(() => {
     if (nodes?.Wolf3D_Avatar) {

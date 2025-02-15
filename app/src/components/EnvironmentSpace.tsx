@@ -82,10 +82,10 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
   const background = "white_modern_living_room_4k.glb";
 
-  const [audioUrl, setAudioUrl] = useState("");
-  const [visemeData, setVisemeData] = useState([]);
+  // const [audioUrl, setAudioUrl] = useState("");
+  // const [visemeData, setVisemeData] = useState([]);
   const [isRoomReady, setIsRoomReady] = useState(false);
-  const { isAvatarReady } = useContext(AvatarContext);
+  const { isAvatarReady, setAudioUrl, setVisemeData } = useContext(AvatarContext);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
@@ -269,8 +269,6 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
       {isRoomReady && (
         <Avatar
           scale={avatar?.scale || 2}
-          audioUrl={audioUrl}
-          visemeData={visemeData}
           url={avatarUrl}
           position={avatar?.position}
           rotate={avatar?.rotate}
