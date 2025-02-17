@@ -1,4 +1,4 @@
-import { lazy, Suspense, memo, useRef } from 'react';
+import { lazy, Suspense, memo } from 'react';
 
 const Summary = lazy(() => import('../AboutMe/Summary'));
 const Experience = lazy(() => import('../AboutMe/Experience'));
