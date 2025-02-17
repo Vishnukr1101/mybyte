@@ -5,17 +5,15 @@ import {
     MenuHandler,
     MenuList,
     MenuItem,
-    Button,
 } from "@material-tailwind/react";
 
 
 const NavigationMenu = () => {
     const { summaryRef, experienceRef, educationRef, projectRef, certificationRef, skillRef } = useSectionRefs();
 
-    const [open, setOpen] = React.useState(false);
+    const [, setOpen] = React.useState(false);
 
     const openDrawer = () => setOpen(true);
-    const closeDrawer = () => setOpen(false);
 
 
     const handleScroll = (sectionRef: React.RefObject<HTMLDivElement>) => {
