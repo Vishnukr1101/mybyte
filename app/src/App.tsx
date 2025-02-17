@@ -43,12 +43,18 @@ const avatarData = {
 function App() {
 
   const [isAvatarReady, setIsAvatarReady] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [visemeData, setVisemeData] = useState<object[]>([]);
   const [audioUrl, setAudioUrl] = useState("");
 
   return (
 
-    <AvatarContext.Provider value={{ isAvatarReady, setIsAvatarReady, visemeData, setVisemeData, audioUrl, setAudioUrl }}>
+    <AvatarContext.Provider value={{
+      isAvatarReady, setIsAvatarReady,
+      visemeData, setVisemeData,
+      audioUrl, setAudioUrl,
+      isFetching, setIsFetching
+    }}>
       <ThemeProvider>
         <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden">
           <React.Suspense fallback={<LoadingScreen />}>

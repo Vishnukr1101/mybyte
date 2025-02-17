@@ -9,11 +9,8 @@ import * as THREE from "three";
 
 import { degToRad } from "three/src/math/MathUtils.js";
 
-// import { getSpeech } from "api/tts";
-
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-// import { rooms } from "constants/room";
 
 type Props = {
   camera?: {
@@ -85,15 +82,15 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   // const [audioUrl, setAudioUrl] = useState("");
   // const [visemeData, setVisemeData] = useState([]);
   const [isRoomReady, setIsRoomReady] = useState(false);
-  const { isAvatarReady, setAudioUrl, setVisemeData } = useContext(AvatarContext);
+  const { isAvatarReady, setAudioUrl, setVisemeData, isFetching, setIsFetching } = useContext(AvatarContext);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
   // Save camera position and target to localStorage when controls change
   const handleControlsChange = () => {
     if (controlsRef.current) {
-      console.log("camera: ", camera.position.toArray())
-      console.log("orbital: ", controlsRef.current.target.toArray())
+      // console.log("camera: ", camera.position.toArray())
+      // console.log("orbital: ", controlsRef.current.target.toArray())
       camera.position.toArray()
       controlsRef.current.target.toArray()
     }
@@ -101,7 +98,9 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
   const getSpeechData = async (text: string) => {
     try {
+      setIsFetching(true)
       if (!text) {
+        setIsFetching(false);
         return false;
       }
       const response = await getSpeech(text).catch((error) => {
@@ -115,6 +114,8 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
           if (visemeData) {
             const viseme = JSON.parse(visemeData || '');
             setVisemeData(viseme);
+          } else {
+            setIsFetching(false);
           }
         }
 
@@ -140,12 +141,13 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
           // Create a Blob from the buffer
           const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
           const audioBlobUrl = URL.createObjectURL(audioBlob);
-          console.log("audio url : ", audioBlobUrl)
           setAudioUrl(audioBlobUrl);
+          setIsFetching(false);
         }
       }
     } catch (error) {
       console.error("Failed to fetch speech, Error: ", error);
+      setIsFetching(false);
     }
   };
 

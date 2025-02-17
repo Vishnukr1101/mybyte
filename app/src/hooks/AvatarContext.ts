@@ -7,6 +7,8 @@ interface AvatarContextType {
   setVisemeData: React.Dispatch<React.SetStateAction<object[]>>;
   audioUrl: string;
   setAudioUrl: React.Dispatch<React.SetStateAction<string>>;
+  isFetching: boolean;
+  setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AvatarContext = createContext<AvatarContextType>({
@@ -16,6 +18,8 @@ const AvatarContext = createContext<AvatarContextType>({
   setVisemeData: () => {},
   audioUrl: "",
   setAudioUrl: () => {},
+  isFetching: false,
+  setIsFetching:  () => {}
 });
 
 export default AvatarContext;
