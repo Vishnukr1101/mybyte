@@ -82,7 +82,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   // const [audioUrl, setAudioUrl] = useState("");
   // const [visemeData, setVisemeData] = useState([]);
   const [isRoomReady, setIsRoomReady] = useState(false);
-  const { isAvatarReady, setAudioUrl, setVisemeData, isFetching, setIsFetching } = useContext(AvatarContext);
+  const { isAvatarReady, setAudioUrl, setVisemeData, setIsFetching } = useContext(AvatarContext);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controlsRef = useRef<any>(null);
