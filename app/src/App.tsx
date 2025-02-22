@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from "@material-tailwind/react";
+import { Analytics } from '@vercel/analytics/react';
+
 import LoadingScreen from './components/LoadingScreen';
 import SidePanel from './components/SidePanel';
 import AvatarContext from './hooks/AvatarContext';
@@ -48,7 +50,6 @@ function App() {
   const [audioUrl, setAudioUrl] = useState("");
 
   return (
-
     <AvatarContext.Provider value={{
       isAvatarReady, setIsAvatarReady,
       visemeData, setVisemeData,
@@ -57,6 +58,7 @@ function App() {
     }}>
       <ThemeProvider>
         <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden">
+          <Analytics />
           <React.Suspense fallback={<LoadingScreen />}>
             <CanvasPage className="flex flex-1 min-h-screen min-w-screen overflow-hidden" viewMode={false} camera={camera}
               avatar={avatarData}

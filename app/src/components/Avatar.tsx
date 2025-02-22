@@ -73,6 +73,8 @@ const Avatar = React.memo((props: Props) => {
 
   const { isAvatarReady, setIsAvatarReady, audioUrl, visemeData } = useContext(AvatarContext);
 
+  const visemeLength = useMemo(() => Object.keys(visemeMap).length, [])
+
 
   const avatarScale = useMemo(() => props.scale || 2, [props.scale]);
   const avatarPosition = useMemo(
@@ -162,23 +164,26 @@ const Avatar = React.memo((props: Props) => {
     });
   };
 
+  console.log("visemeMap keys: ", visemeLength)
+
   useFrame(() => {
     // Smile
     lerpMorphTarget("mouthSmileRight", 0.2, 0.5);
     lerpMorphTarget("mouthSmileLeft", 0.2, 0.5);
 
     // Talking
-    // for (let i = 0; i <= 21; i++) {
-    //   lerpMorphTarget(i, 0, 0.1); // reset morph targets
-    // }
 
-    
+    for (let i = 0; i <= visemeLength; i++) {
+      lerpMorphTarget(i, 0, 0.1); // reset morph targets
+    }
+
+
     if (isAvatarReady && visemeData && playing) {
-      console.log("check frame loop: ", isAvatarReady && visemeData && playing, " viseme : ", visemeData)
+      // console.log("check frame loop: ", isAvatarReady && visemeData && playing, " viseme : ", visemeData)
       for (let i = 0; i <= visemeData.length - 1; i++) {
         const viseme = visemeData[i];
 
-        console.log("time: ", getPosition() *1000, " viseme time: ", viseme.time)
+        // console.log("time: ", getPosition() *1000, " viseme time: ", viseme.time)
 
         if (getPosition() * 1000 >= viseme.time) {
           lerpMorphTarget(viseme.value, 1, 0.2);

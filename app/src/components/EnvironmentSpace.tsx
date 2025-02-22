@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
+import React, { useState, useRef, useEffect, useMemo, useContext, useCallback } from "react";
 import {
   OrbitControls,
   useGLTF,
@@ -96,66 +96,68 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
     }
   };
 
-  const getSpeechData = async (text: string) => {
-    try {
-      setIsFetching(true)
-      if (!text) {
-        setIsFetching(false);
-        return false;
-      }
-      const response = await getSpeech(text).catch((error) => {
-        console.error("Failed to get speech, Error: ", error);
-      });
+  const getSpeechData = useCallback(
+    async (text: string) => {
+      try {
+        setIsFetching(true)
+        if (!text) {
+          setIsFetching(false);
+          return false;
+        }
+        const response = await getSpeech(text).catch((error) => {
+          console.error("Failed to get speech, Error: ", error);
+        });
 
-      if (response) {
-        if (response.headers) {
-          // Extract visemes from response headers
-          const visemeData = response.headers.get("x-viseme");
-          if (visemeData) {
-            const viseme = JSON.parse(visemeData || '');
-            setVisemeData(viseme);
-          } else {
+        if (response) {
+          if (response.headers) {
+            // Extract visemes from response headers
+            const visemeData = response.headers.get("x-viseme");
+            if (visemeData) {
+              const viseme = JSON.parse(visemeData || '');
+              setVisemeData(viseme);
+            } else {
+              setIsFetching(false);
+            }
+          }
+
+          if (response.body) {
+            // Set the audio source
+            const reader = response.body.getReader();
+            const chunks = [];
+
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+            }
+
+            // Combine all chunks into a single Uint8Array
+            const audioBuffer = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+            let offset = 0;
+            chunks.forEach((chunk) => {
+              audioBuffer.set(chunk, offset);
+              offset += chunk.length;
+            });
+
+            // Create a Blob from the buffer
+            const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
+            const audioBlobUrl = URL.createObjectURL(audioBlob);
+            setAudioUrl(audioBlobUrl);
             setIsFetching(false);
           }
         }
-
-        if (response.body) {
-          // Set the audio source
-          const reader = response.body.getReader();
-          const chunks = [];
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            chunks.push(value);
-          }
-
-          // Combine all chunks into a single Uint8Array
-          const audioBuffer = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
-          let offset = 0;
-          chunks.forEach((chunk) => {
-            audioBuffer.set(chunk, offset);
-            offset += chunk.length;
-          });
-
-          // Create a Blob from the buffer
-          const audioBlob = new Blob([audioBuffer], { type: "audio/mpeg" });
-          const audioBlobUrl = URL.createObjectURL(audioBlob);
-          setAudioUrl(audioBlobUrl);
-          setIsFetching(false);
-        }
+      } catch (error) {
+        console.error("Failed to fetch speech, Error: ", error);
+        setIsFetching(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch speech, Error: ", error);
-      setIsFetching(false);
-    }
-  };
+    },
+    [setAudioUrl, setIsFetching, setVisemeData]
+  )
+
 
   useEffect(() => {
     if (avatar?.speechText && avatar?.speechText.trim() && isAvatarReady) {
-      getSpeechData(avatar?.speechText).catch(error => {
-        console.log("Failed to get speech : ", error)
-      })
+      getSpeechData(avatar?.speechText)
     }
 
     return () => { }
