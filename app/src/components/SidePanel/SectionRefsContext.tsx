@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef } from "react";
+import React, { createContext, SetStateAction, useContext, useRef, useState } from "react";
 
 type SectionRefs = {
   summaryRef: React.RefObject<HTMLDivElement>;
@@ -7,6 +7,8 @@ type SectionRefs = {
   skillRef: React.RefObject<HTMLDivElement>;
   projectRef: React.RefObject<HTMLDivElement>;
   certificationRef: React.RefObject<HTMLDivElement>;
+  hidden: boolean;
+  setHidden: React.Dispatch<SetStateAction<boolean>>
 };
 
 const SectionRefsContext = createContext<SectionRefs | null>(null);
@@ -19,8 +21,10 @@ export const SectionRefsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const projectRef = useRef<HTMLDivElement>(null);
   const certificationRef = useRef<HTMLDivElement>(null);
 
+  const [hidden, setHidden] = useState(false);
+
   return (
-    <SectionRefsContext.Provider value={{ summaryRef, experienceRef, educationRef, skillRef, projectRef, certificationRef }}>
+    <SectionRefsContext.Provider value={{ summaryRef, experienceRef, educationRef, skillRef, projectRef, certificationRef, hidden, setHidden }}>
       {children}
     </SectionRefsContext.Provider>
   );

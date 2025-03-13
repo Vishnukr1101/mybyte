@@ -9,7 +9,7 @@ import {
 
 
 const NavigationMenu = () => {
-    const { summaryRef, experienceRef, educationRef, projectRef, certificationRef, skillRef } = useSectionRefs();
+    const { summaryRef, experienceRef, educationRef, projectRef, certificationRef, skillRef, hidden, setHidden } = useSectionRefs();
 
     const [, setOpen] = React.useState(false);
 
@@ -19,6 +19,11 @@ const NavigationMenu = () => {
     const handleScroll = (sectionRef: React.RefObject<HTMLDivElement>) => {
         sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
+
+
+    const handleHideClick = () => {
+        setHidden(!hidden);
+    }
 
     const buttonClassName = "px-4 py-2 m-2 text-center text-black shadow-md hover:shadow-lg rounded-md min-w-20 bg-white ease-in hover:bg-white hover:text-teal-700"
 
@@ -54,6 +59,7 @@ const NavigationMenu = () => {
                             className='text-white rounded-full w-9 h-9 p-1 m-1 my-4 outline-none border-none bg-white shadow-sm hover:shadow-md'
                             onClick={openDrawer}
                             id="menu-button"
+                            aria-label='menu button'
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path
@@ -119,8 +125,15 @@ const NavigationMenu = () => {
                 </MenuList>
 
             </Menu>
+
+            <div className="absolute top-0  m-1 my-4  left-10 xl:left-0 right-0">
+                <button aria-label='Hide panel' className="p-2 text-black shadow-md hover:shadow-lg rounded-full text-center bg-white" onClick={handleHideClick}>
+                    Hide panel
+                </button>
+            </div>
         </>
     )
+
 }
 
 export default NavigationMenu
