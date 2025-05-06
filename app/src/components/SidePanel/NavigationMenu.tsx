@@ -6,7 +6,7 @@ import {
     MenuList,
     MenuItem,
 } from "@material-tailwind/react";
-
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 const NavigationMenu = () => {
     const { summaryRef, experienceRef, educationRef, projectRef, certificationRef, skillRef, hidden, setHidden } = useSectionRefs();
@@ -77,48 +77,48 @@ const NavigationMenu = () => {
 
                 <MenuList
                     placeholder={undefined}
-                    onPointerEnterCapture={undefined}
-                    onPointerLeaveCapture={undefined}
+                    onPointerEnterCapture={() => { }}
+                    onPointerLeaveCapture={() => { }}
                 >
                     <MenuItem onClick={() => handleScroll(summaryRef)}
                         placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
+                        onPointerEnterCapture={() => { }}
+                        onPointerLeaveCapture={() => { }}
                     >
                         Summary
                     </MenuItem>
                     <MenuItem onClick={() => handleScroll(experienceRef)}
                         placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
+                        onPointerEnterCapture={() => { }}
+                        onPointerLeaveCapture={() => { }}
                     >
                         Experience
                     </MenuItem>
                     <MenuItem onClick={() => handleScroll(projectRef)}
                         placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
+                        onPointerEnterCapture={() => { }}
+                        onPointerLeaveCapture={() => { }}
                     >
                         Projects
                     </MenuItem>
                     <MenuItem onClick={() => handleScroll(skillRef)}
                         placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
+                        onPointerEnterCapture={() => { }}
+                        onPointerLeaveCapture={() => { }}
                     >
                         Skills
                     </MenuItem>
                     <MenuItem onClick={() => handleScroll(educationRef)}
                         placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
+                        onPointerEnterCapture={() => { }}
+                        onPointerLeaveCapture={() => { }}
                     >
                         Education
                     </MenuItem>
                     <MenuItem onClick={() => handleScroll(certificationRef)}
                         placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
+                        onPointerEnterCapture={() => { }}
+                        onPointerLeaveCapture={() => { }}
                     >
                         Certifications
                     </MenuItem>
@@ -128,7 +128,7 @@ const NavigationMenu = () => {
 
             <div className="absolute top-0  m-1 my-4  left-10 xl:left-0 right-0">
                 <button aria-label='Hide panel' className="p-2 text-black shadow-md hover:shadow-lg rounded-full text-center bg-white" onClick={handleHideClick}>
-                    Hide panel
+                    {hidden ? <EyeIcon className="w-5 h-5" /> : <EyeSlashIcon className="w-5 h-5" />}
                 </button>
             </div>
         </>
