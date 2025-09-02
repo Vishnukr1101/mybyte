@@ -94,4 +94,7 @@ export const helloViseme = [
   },
 ];
 
-export const audioFileStream = fs.createReadStream(path.join(__dirname, 'hello.mp3'));
+// Function to create a new stream for each request to avoid stream reuse issues
+export const createAudioFileStream = () => {
+  return fs.createReadStream(path.join(__dirname, 'hello.mp3'));
+};

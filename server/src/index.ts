@@ -9,7 +9,7 @@ configDotenv();
 import winston from "winston";
 import { getSpeechSynthesis } from "./helpers/aws-polly";
 
-import { audioFileStream, helloViseme } from "./static/hello";
+import { createAudioFileStream, helloViseme } from "./static/hello";
 
 const log = winston.createLogger({
   level: "info",
@@ -77,29 +77,47 @@ interface SpeechRequestBody {
 //   }
 // );
 
-app.post("/speech", async(req: Request, res: Response) => {
- try {
-   const visemeData = JSON.stringify(helloViseme);
-      res.setHeader("x-viseme", visemeData);
-      // 4. Stream the audio as the response body
-      res.setHeader("Content-Type", "audio/mpeg");
+app.post("/speech", async (req: Request<{}, {}, SpeechRequestBody>, res: Response): Promise<void> => {
+  try {
+    // Create a new stream for each request to avoid reuse issues
+    const audioFileStream = createAudioFileStream();
+    
+    // Set viseme data as header
+    const visemeData = JSON.stringify(helloViseme);
+    res.setHeader("x-viseme", visemeData);
+    
+    // Set content type for audio
+    res.setHeader("Content-Type", "audio/mpeg");
+    res.setHeader("Cache-Control", "no-cache");
 
-      audioFileStream.on('error' , (error) => {
+    // Handle stream errors
+    audioFileStream.on('error', (error) => {
+      logger('Audio stream error:', error);
+      if (!res.headersSent) {
         res.status(500).json({
-          message: "Internal Server Error, Stream broken",
+          message: "Internal Server Error - Audio stream failed",
           error: error.message,
         });
-      })
+      }
+    });
 
-      audioFileStream.pipe(res);
+    // Handle when stream ends
+    audioFileStream.on('end', () => {
+      logger('Audio stream ended successfully');
+    });
 
-    } catch (error: any) {
+    // Pipe the audio stream to the response
+    audioFileStream.pipe(res);
+
+  } catch (error: any) {
+    logger('Speech endpoint error:', error);
+    if (!res.headersSent) {
       res.status(500).json({
         message: "Internal Server Error",
         error: error.message,
       });
     }
-
+  }
 });
 
 // error handler middleware
