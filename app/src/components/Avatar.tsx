@@ -9,8 +9,6 @@ import { idleAnimations, visemeMap } from "../utils";
 import { randInt } from "three/src/math/MathUtils.js";
 import AvatarContext from "../hooks/AvatarContext";
 
-import { animationActions as gestures } from "../utils";
-
 // Type definitions for better TypeScript support
 interface VisemeData {
   time: number;
