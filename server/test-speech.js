@@ -54,11 +54,8 @@ function testSpeechEndpoint() {
     console.log(`Headers:`, res.headers);
     
     if (res.headers['x-viseme']) {
-      console.log('Viseme data found in headers');
       try {
         const visemeData = JSON.parse(res.headers['x-viseme']);
-        console.log('Viseme count:', visemeData.length);
-        console.log('First viseme:', visemeData[0]);
       } catch (e) {
         console.error('Error parsing viseme data:', e.message);
       }

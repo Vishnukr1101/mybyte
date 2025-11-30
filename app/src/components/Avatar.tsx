@@ -4,10 +4,12 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useGlobalAudioPlayer } from "react-use-audio-player";
-import { visemeMap } from "../utils";
+import { idleAnimations, visemeMap } from "../utils";
 
 import { randInt } from "three/src/math/MathUtils.js";
 import AvatarContext from "../hooks/AvatarContext";
+
+import { animationActions as gestures } from "../utils";
 
 // Type definitions for better TypeScript support
 interface VisemeData {
@@ -44,37 +46,6 @@ type Props = {
   isMuted?: boolean;
 }
 
-const gestures = [
-  "acknowledging",
-  "angry_gesture",
-  "angry_point",
-  "annoyed_head_shake",
-  "being_cocky",
-  "disappointed",
-  "dismissing_gesture",
-  "happy_hand_gesture",
-  "happy_idle",
-  "hard_head_nod",
-  "head_nod_yes",
-  "idle",
-  "lengthy_head_nod",
-  "look_away_gesture",
-  "pointing",
-  "pointing_1_",
-  "quick_formal_bow",
-  "relieved_sigh",
-  "salute",
-  "sarcastic_head_nod",
-  "shaking_head_no",
-  "talking",
-  "talking_1_",
-  "thoughtful_head_shake",
-  "walking",
-  "waving",
-  "waving_1_",
-  "weight_shift"
-];
-
 
 const Avatar = React.memo((props: Props) => {
   const group = useRef<THREE.Group>(null);
@@ -87,8 +58,7 @@ const Avatar = React.memo((props: Props) => {
     return [...(visemeData as VisemeData[])].sort((a: VisemeData, b: VisemeData) => a.time - b.time);
   }, [visemeData]);
 
-  const visemeLength = useMemo(() => Object.keys(visemeMap).length, [])
-
+  // const visemeLength = useMemo(() => Object.keys(visemeMap).length, [])
 
   const avatarScale = useMemo(() => props.scale || 2, [props.scale]);
   const avatarPosition = useMemo(
@@ -189,8 +159,6 @@ const Avatar = React.memo((props: Props) => {
     });
   };
 
-  console.log("visemeMap keys: ", visemeLength)
-
   useFrame(() => {
     // Smile
     lerpMorphTarget("mouthSmileRight", 0.2, 0.5);
@@ -199,7 +167,7 @@ const Avatar = React.memo((props: Props) => {
     // Handle lip sync during audio playback
     if (isAvatarReady && sortedVisemeData && playing) {
       const currentTime = getPosition() * 1000; // Convert to milliseconds
-      
+
       // Reset all viseme morph targets first
       Object.values(visemeMap).forEach((morphTargetName) => {
         if (nodes?.Wolf3D_Avatar && (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetDictionary) {
@@ -236,9 +204,10 @@ const Avatar = React.memo((props: Props) => {
           actions[animate].time >
           actions[animate].getClip().duration - ANIMATION_FADE_TIME
         ) {
-          setAnimate((animation) =>
-            animation === "Talking" ? "Talking_2" : "Talking",
-          ); // Could load more type of animations and randomization here
+          // TODO: Fix talking animation loop
+          // setAnimate((animation) =>
+          //   animation === "Talking" ? "Talking" : "Talking",
+          // ); // Could load more type of animations and randomization here
         }
       }
     } else if (!playing) {
@@ -248,7 +217,7 @@ const Avatar = React.memo((props: Props) => {
   });
 
   const handleAudioEnd = () => {
-    console.log("Audio ended - resetting morph targets");
+    // "Audio ended - resetting morph targets"
     resetMorphTargets(false); // Immediate reset when audio ends
     setAnimate(defaultAnimation);
   };
@@ -400,33 +369,30 @@ const Avatar = React.memo((props: Props) => {
   // Track head or eye end
 
 
-  // random gestures 
-  // const [gesture, setGesture] = useState<string>(() => gestures[Math.floor(Math.random() * gestures.length)]);
+  // random gestures
+  const [gesture, setGesture] = useState<string>(() => idleAnimations[Math.floor(Math.random() * idleAnimations.length)]);
 
-  // // Function to select a random gesture
-  // const getRandomGesture = React.useCallback(() => {
-  //   let newGesture;
-  //   do {
-  //     newGesture = gestures[Math.floor(Math.random() * gestures.length)];
-  //   } while (newGesture === gesture); // Avoid repeating the current gesture
-  //   return newGesture;
-  // }, [gesture]);
+  // Function to select a random gesture
+  const getRandomGesture = React.useCallback(() => {
+    let newGesture;
+    do {
+      newGesture = idleAnimations[Math.floor(Math.random() * idleAnimations.length)];
+    } while (newGesture === gesture); // Avoid repeating the current gesture
+    return newGesture;
+  }, [gesture]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setGesture(getRandomGesture);
-  //   }, 5000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGesture(getRandomGesture);
+    }, 30000); // Changed from 5000 to 30000 (30 seconds)
 
-  //   return () => clearInterval(interval);
-  // }, [getRandomGesture]);
+    return () => clearInterval(interval);
+  }, [getRandomGesture]);
 
-  // useEffect(() => {
-  //   setAnimate(gesture)
-
-  //   return () => {
-
-  //   }
-  // }, [gesture])
+  useEffect(() => {
+    setAnimate(gesture)
+    return () => {}
+  }, [gesture])
 
 
 
