@@ -1,17 +1,25 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 // https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?useQuantizeMeshOptCompression=true&quality=high&textureQuality=high&morphTargets=ARKit,Oculus Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown&pose=A
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useGlobalAudioPlayer } from "react-use-audio-player";
-import { visemeMap } from "../utils";
+import { idleAnimations, visemeMap } from "../utils";
 
 import { randInt } from "three/src/math/MathUtils.js";
 import AvatarContext from "../hooks/AvatarContext";
 
+// Type definitions for better TypeScript support
+interface VisemeData {
+  time: number;
+  type: string;
+  value: string;
+}
+
+interface AvatarMesh extends THREE.SkinnedMesh {
+  morphTargetDictionary: { [key: string]: number };
+  morphTargetInfluences: number[];
+}
 
 const morphTargetSmoothing = 0.08;
 const defaultAnimation = "idle";
@@ -36,45 +44,19 @@ type Props = {
   isMuted?: boolean;
 }
 
-const gestures = [
-  "acknowledging",
-  "angry_gesture",
-  "angry_point",
-  "annoyed_head_shake",
-  "being_cocky",
-  "disappointed",
-  "dismissing_gesture",
-  "happy_hand_gesture",
-  "happy_idle",
-  "hard_head_nod",
-  "head_nod_yes",
-  "idle",
-  "lengthy_head_nod",
-  "look_away_gesture",
-  "pointing",
-  "pointing_1_",
-  "quick_formal_bow",
-  "relieved_sigh",
-  "salute",
-  "sarcastic_head_nod",
-  "shaking_head_no",
-  "talking",
-  "talking_1_",
-  "thoughtful_head_shake",
-  "walking",
-  "waving",
-  "waving_1_",
-  "weight_shift"
-];
-
 
 const Avatar = React.memo((props: Props) => {
-  const group = useRef();
+  const group = useRef<THREE.Group>(null);
 
   const { isAvatarReady, setIsAvatarReady, audioUrl, visemeData } = useContext(AvatarContext);
 
-  const visemeLength = useMemo(() => Object.keys(visemeMap).length, [])
+  // Sort viseme data by time for efficient lookup and add proper typing
+  const sortedVisemeData = useMemo(() => {
+    if (!visemeData || !Array.isArray(visemeData)) return [];
+    return [...(visemeData as VisemeData[])].sort((a: VisemeData, b: VisemeData) => a.time - b.time);
+  }, [visemeData]);
 
+  // const visemeLength = useMemo(() => Object.keys(visemeMap).length, [])
 
   const avatarScale = useMemo(() => props.scale || 2, [props.scale]);
   const avatarPosition = useMemo(
@@ -103,7 +85,7 @@ const Avatar = React.memo((props: Props) => {
     }
 
     return () => { };
-  }, [actions, group, props]);
+  }, [actions, group, setIsAvatarReady]);
 
   useEffect(() => {
     stop();
@@ -115,7 +97,10 @@ const Avatar = React.memo((props: Props) => {
       });
     }
 
-    return () => { };
+    return () => {
+      // Cleanup: reset morph targets when component unmounts or audio changes
+      resetMorphTargets(false);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [load, audioUrl, stop]);
 
@@ -126,7 +111,7 @@ const Avatar = React.memo((props: Props) => {
 
       if (elapsedTimeSinceLastBlink >= randInt(1000, 5000)) {
         const { eyeBlinkLeft, eyeBlinkRight } =
-          nodes.Wolf3D_Avatar.morphTargetDictionary;
+          (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetDictionary;
         blink(eyeBlinkLeft, eyeBlinkRight);
         lastBlinkTime.current = currentTime;
       }
@@ -134,78 +119,104 @@ const Avatar = React.memo((props: Props) => {
   });
 
   const lerpMorphTarget = (target: string, value: number, speed = 0.1) => {
-    if (nodes?.Wolf3D_Avatar && nodes?.Wolf3D_Avatar?.morphTargetDictionary) {
-      const morphTarget = visemeMap[target];
+    if (nodes?.Wolf3D_Avatar && (nodes?.Wolf3D_Avatar as AvatarMesh)?.morphTargetDictionary) {
+      // If target is a phoneme, map it to the correct morph target
+      const morphTarget = visemeMap[target] || target;
 
-      const index = nodes.Wolf3D_Avatar.morphTargetDictionary[morphTarget];
+      const index = (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetDictionary[morphTarget];
       if (
         index === undefined ||
-        nodes.Wolf3D_Avatar.morphTargetInfluences[index] === undefined
+        (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index] === undefined
       ) {
         return;
       }
-      nodes.Wolf3D_Avatar.morphTargetInfluences[index] = THREE.MathUtils.lerp(
-        nodes.Wolf3D_Avatar.morphTargetInfluences[index],
+      (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index] = THREE.MathUtils.lerp(
+        (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index],
         value,
         speed,
       );
     }
   };
 
-  const resetMorphTargets = () => {
+  const resetMorphTargets = (smooth = true) => {
     if (!nodes?.Wolf3D_Avatar) return;
-    Object.values(visemeMap).forEach((value) => {
-      const index = nodes.Wolf3D_Avatar.morphTargetDictionary[value];
-      nodes.Wolf3D_Avatar.morphTargetInfluences[index] = THREE.MathUtils.lerp(
-        nodes.Wolf3D_Avatar.morphTargetInfluences[index],
-        0,
-        morphTargetSmoothing,
-      );
+    Object.values(visemeMap).forEach((morphTargetName) => {
+      const index = (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetDictionary[morphTargetName];
+      if (index !== undefined) {
+        if (smooth) {
+          (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index] = THREE.MathUtils.lerp(
+            (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index],
+            0,
+            morphTargetSmoothing,
+          );
+        } else {
+          // Immediate reset
+          (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index] = 0;
+        }
+      }
     });
   };
-
-  console.log("visemeMap keys: ", visemeLength)
 
   useFrame(() => {
     // Smile
     lerpMorphTarget("mouthSmileRight", 0.2, 0.5);
     lerpMorphTarget("mouthSmileLeft", 0.2, 0.5);
 
-    // Talking
+    // Handle lip sync during audio playback
+    if (isAvatarReady && sortedVisemeData && playing) {
+      const currentTime = getPosition() * 1000; // Convert to milliseconds
 
-    for (let i = 0; i <= visemeLength; i++) {
-      lerpMorphTarget(i, 0, 0.1); // reset morph targets
-    }
+      // Reset all viseme morph targets first
+      Object.values(visemeMap).forEach((morphTargetName) => {
+        if (nodes?.Wolf3D_Avatar && (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetDictionary) {
+          const index = (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetDictionary[morphTargetName];
+          if (index !== undefined) {
+            (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index] = THREE.MathUtils.lerp(
+              (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[index],
+              0,
+              morphTargetSmoothing,
+            );
+          }
+        }
+      });
 
-
-    if (isAvatarReady && visemeData && playing) {
-      // console.log("check frame loop: ", isAvatarReady && visemeData && playing, " viseme : ", visemeData)
-      for (let i = 0; i <= visemeData.length - 1; i++) {
-        const viseme = visemeData[i];
-
-        // console.log("time: ", getPosition() *1000, " viseme time: ", viseme.time)
-
-        if (getPosition() * 1000 >= viseme.time) {
-          lerpMorphTarget(viseme.value, 1, 0.2);
-          break;
+      // Find the current viseme based on audio time
+      let currentViseme: VisemeData | null = null;
+      for (let i = 0; i < sortedVisemeData.length; i++) {
+        const viseme = sortedVisemeData[i];
+        if (currentTime >= viseme.time) {
+          currentViseme = viseme;
+        } else {
+          break; // Since visemes are chronologically ordered
         }
       }
 
+      // Apply the current viseme morph target
+      if (currentViseme && currentViseme.value !== "sil") {
+        lerpMorphTarget(currentViseme.value, 1, 0.3);
+      }
+
+      // Handle animation transitions
       if (actions[animate] && actions[animate]?.time) {
         if (
           actions[animate].time >
           actions[animate].getClip().duration - ANIMATION_FADE_TIME
         ) {
-          setAnimate((animation) =>
-            animation === "Talking" ? "Talking_2" : "Talking",
-          ); // Could load more type of animations and randomization here
+          // TODO: Fix talking animation loop
+          // setAnimate((animation) =>
+          //   animation === "Talking" ? "Talking" : "Talking",
+          // ); // Could load more type of animations and randomization here
         }
       }
+    } else if (!playing) {
+      // Reset all viseme morph targets when not playing
+      resetMorphTargets(true);
     }
   });
 
   const handleAudioEnd = () => {
-    resetMorphTargets();
+    // "Audio ended - resetting morph targets"
+    resetMorphTargets(false); // Immediate reset when audio ends
     setAnimate(defaultAnimation);
   };
 
@@ -225,13 +236,13 @@ const Avatar = React.memo((props: Props) => {
     };
   }, [actions, animate, animations]);
 
-  const blink = (eyeBlinkLeft, eyeBlinkRight) => {
-    nodes.Wolf3D_Avatar.morphTargetInfluences[eyeBlinkLeft] = 1;
-    nodes.Wolf3D_Avatar.morphTargetInfluences[eyeBlinkRight] = 1;
+  const blink = (eyeBlinkLeft: number, eyeBlinkRight: number) => {
+    (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[eyeBlinkLeft] = 1;
+    (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[eyeBlinkRight] = 1;
 
     setTimeout(() => {
-      nodes.Wolf3D_Avatar.morphTargetInfluences[eyeBlinkLeft] = 0;
-      nodes.Wolf3D_Avatar.morphTargetInfluences[eyeBlinkRight] = 0;
+      (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[eyeBlinkLeft] = 0;
+      (nodes.Wolf3D_Avatar as AvatarMesh).morphTargetInfluences[eyeBlinkRight] = 0;
     }, 100);
   };
 
@@ -244,7 +255,7 @@ const Avatar = React.memo((props: Props) => {
   }, [playing, props]);
 
   useEffect(() => {
-    mute(props.isMuted);
+    mute(props.isMuted || false);
 
     return () => { };
   }, [props.isMuted, mute]);
@@ -356,33 +367,30 @@ const Avatar = React.memo((props: Props) => {
   // Track head or eye end
 
 
-  // random gestures 
-  // const [gesture, setGesture] = useState<string>(() => gestures[Math.floor(Math.random() * gestures.length)]);
+  // random gestures
+  const [gesture, setGesture] = useState<string>(() => idleAnimations[Math.floor(Math.random() * idleAnimations.length)]);
 
-  // // Function to select a random gesture
-  // const getRandomGesture = React.useCallback(() => {
-  //   let newGesture;
-  //   do {
-  //     newGesture = gestures[Math.floor(Math.random() * gestures.length)];
-  //   } while (newGesture === gesture); // Avoid repeating the current gesture
-  //   return newGesture;
-  // }, [gesture]);
+  // Function to select a random gesture
+  const getRandomGesture = React.useCallback(() => {
+    let newGesture;
+    do {
+      newGesture = idleAnimations[Math.floor(Math.random() * idleAnimations.length)];
+    } while (newGesture === gesture); // Avoid repeating the current gesture
+    return newGesture;
+  }, [gesture]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setGesture(getRandomGesture);
-  //   }, 5000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGesture(getRandomGesture);
+    }, 30000); // Changed from 5000 to 30000 (30 seconds)
 
-  //   return () => clearInterval(interval);
-  // }, [getRandomGesture]);
+    return () => clearInterval(interval);
+  }, [getRandomGesture]);
 
-  // useEffect(() => {
-  //   setAnimate(gesture)
-
-  //   return () => {
-
-  //   }
-  // }, [gesture])
+  useEffect(() => {
+    setAnimate(gesture)
+    return () => {}
+  }, [gesture])
 
 
 
@@ -405,11 +413,11 @@ const Avatar = React.memo((props: Props) => {
           castShadow
           receiveShadow
           name="Wolf3D_Avatar"
-          geometry={nodes?.Wolf3D_Avatar?.geometry}
+          geometry={(nodes?.Wolf3D_Avatar as AvatarMesh)?.geometry}
           material={materials?.Wolf3D_Avatar}
-          skeleton={nodes?.Wolf3D_Avatar?.skeleton}
-          morphTargetDictionary={nodes?.Wolf3D_Avatar?.morphTargetDictionary}
-          morphTargetInfluences={nodes?.Wolf3D_Avatar?.morphTargetInfluences}
+          skeleton={(nodes?.Wolf3D_Avatar as AvatarMesh)?.skeleton}
+          morphTargetDictionary={(nodes?.Wolf3D_Avatar as AvatarMesh)?.morphTargetDictionary}
+          morphTargetInfluences={(nodes?.Wolf3D_Avatar as AvatarMesh)?.morphTargetInfluences}
         />
       )}
     </group>

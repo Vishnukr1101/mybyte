@@ -8,6 +8,8 @@ const LoadingScreen = () => {
                 className="h-12 w-12 text-blue-500"
                 onPointerEnterCapture={() => {}}
                 onPointerLeaveCapture={() => {}}
+                onResize={() => {}}
+                onResizeCapture={() => {}}
             />
             <h1 className="text-lg font-bold mt-4 font-doto">Please wait<span className="blink">_</span></h1>
         </div>

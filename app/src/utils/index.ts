@@ -97,5 +97,12 @@ export const animationActions = [
   "walking",
   "waving",
   "waving_1_",
+  "weight_shift"
+];
+
+export const idleAnimations = [
+  "idle",
+  "happy_idle",
   "weight_shift",
+  "sarcastic_head_nod"
 ];

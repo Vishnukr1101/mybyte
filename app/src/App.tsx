@@ -9,27 +9,27 @@ import AvatarContext from './hooks/AvatarContext';
 const CanvasPage = React.lazy(() => import("./components/CanvasPage"))
 
 const camera = {
-  cameraPosition: [5.002666692561189, 3.303148383086136, -0.49805992094516843],
-  orbitalTarget: [4.802197359669965, 3.268883557802778, -0.46309305884569685]
+  cameraPosition: [-36.36905688691017, 41.05431296457492, -31.76677745244399],
+  orbitalTarget: [-39.78377129105793, 38.92269318309951, -19.93789269489745]
 };
 
 const avatarData = {
   speechText: "Hello, How can I help you?",
   position: {
-    x: 1.07,
-    y: 0,
+    x: -40,
+    y: 12.2,
     z: 0
   },
   rotate: {
     x: 0,
-    y: -1.3,
+    y: 0,
     z: 0
   },
-  scale: 2,
+  scale: 18,
   room: {
     position: {
       x: 0,
-      y: 0.40,
+      y: 0,
       z: 0,
     },
     rotate: {
@@ -37,7 +37,7 @@ const avatarData = {
       y: 0,
       z: 0
     },
-    scale: 2
+    scale: 25
   }
 };
 

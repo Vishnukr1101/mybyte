@@ -79,11 +79,15 @@ const NavigationMenu = () => {
                     placeholder={undefined}
                     onPointerEnterCapture={() => { }}
                     onPointerLeaveCapture={() => { }}
+                    onResize={() => {}}
+                    onResizeCapture={() => {}}
                 >
                     <MenuItem onClick={() => handleScroll(summaryRef)}
                         placeholder={undefined}
                         onPointerEnterCapture={() => { }}
                         onPointerLeaveCapture={() => { }}
+                        onResize={() => {}}
+                        onResizeCapture={() => {}}
                     >
                         Summary
                     </MenuItem>
@@ -91,6 +95,8 @@ const NavigationMenu = () => {
                         placeholder={undefined}
                         onPointerEnterCapture={() => { }}
                         onPointerLeaveCapture={() => { }}
+                        onResize={() => {}}
+                        onResizeCapture={() => {}}
                     >
                         Experience
                     </MenuItem>
@@ -98,6 +104,8 @@ const NavigationMenu = () => {
                         placeholder={undefined}
                         onPointerEnterCapture={() => { }}
                         onPointerLeaveCapture={() => { }}
+                        onResize={() => {}}
+                        onResizeCapture={() => {}}
                     >
                         Projects
                     </MenuItem>
@@ -105,6 +113,8 @@ const NavigationMenu = () => {
                         placeholder={undefined}
                         onPointerEnterCapture={() => { }}
                         onPointerLeaveCapture={() => { }}
+                        onResize={() => {}}
+                        onResizeCapture={() => {}}
                     >
                         Skills
                     </MenuItem>
@@ -112,6 +122,8 @@ const NavigationMenu = () => {
                         placeholder={undefined}
                         onPointerEnterCapture={() => { }}
                         onPointerLeaveCapture={() => { }}
+                        onResize={() => {}}
+                        onResizeCapture={() => {}}
                     >
                         Education
                     </MenuItem>
@@ -119,6 +131,8 @@ const NavigationMenu = () => {
                         placeholder={undefined}
                         onPointerEnterCapture={() => { }}
                         onPointerLeaveCapture={() => { }}
+                        onResize={() => {}}
+                        onResizeCapture={() => {}}
                     >
                         Certifications
                     </MenuItem>

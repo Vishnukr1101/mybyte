@@ -77,7 +77,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   } = props;
   const { camera } = useThree();
 
-  const background = "white_modern_living_room_4k.glb";
+  const background = "the_great_drawing_room.glb";
 
   // const [audioUrl, setAudioUrl] = useState("");
   // const [visemeData, setVisemeData] = useState([]);
@@ -89,8 +89,9 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
   // Save camera position and target to localStorage when controls change
   const handleControlsChange = () => {
     if (controlsRef.current) {
-      // console.log("camera: ", camera.position.toArray())
-      // console.log("orbital: ", controlsRef.current.target.toArray())
+      console.log("camera: ", camera.position.toArray())
+      console.log(" camera zoom: ", camera.zoom)
+      console.log("orbital: ", controlsRef.current.target.toArray())
       camera.position.toArray()
       controlsRef.current.target.toArray()
     }
