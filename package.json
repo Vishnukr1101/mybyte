@@ -7,9 +7,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "app": "cd app & yarn dev",
-    "server": "cd server & yarn dev",
-    "dev": "concurrently \"yarn app\" \"yarn server\" "
+    "app": "cd app & pnpm dev",
+    "server": "cd server & pnpm dev",
+    "dev": "concurrently \"pnpm app\" \"pnpm server\" "
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

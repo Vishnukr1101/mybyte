@@ -264,6 +264,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
 
       <OrbitControls
         args={[camera]}
+        makeDefault
         ref={(ref) => (controlsRef.current = ref)}
         enableDamping
         enableZoom={!viewMode}

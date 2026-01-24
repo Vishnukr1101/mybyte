@@ -50,6 +50,26 @@ const Avatar = React.memo((props: Props) => {
 
   const { isAvatarReady, setIsAvatarReady, audioUrl, visemeData } = useContext(AvatarContext);
 
+  // Keyboard controls
+  const keyboardState = useRef<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keyboardState.current[e.key] = true;
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      keyboardState.current[e.key] = false;
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
   // Sort viseme data by time for efficient lookup and add proper typing
   const sortedVisemeData = useMemo(() => {
     if (!visemeData || !Array.isArray(visemeData)) return [];
@@ -68,6 +88,17 @@ const Avatar = React.memo((props: Props) => {
       ),
     [props.position],
   );
+
+  useEffect(() => {
+    if (group.current) {
+      group.current.position.copy(avatarPosition);
+      group.current.rotation.set(
+        props?.rotate?.x || 0,
+        props?.rotate?.y || 0,
+        props?.rotate?.z || 0
+      );
+    }
+  }, [avatarPosition, props.rotate]);
 
   const [animate, setAnimate] = useState(defaultAnimation);
   const { load, getPosition, playing, stop, mute } = useGlobalAudioPlayer();
@@ -364,6 +395,67 @@ const Avatar = React.memo((props: Props) => {
       );
     }
   });
+
+  useFrame((state, delta) => {
+    const { w, a, s, d, W, A, S, D, ArrowUp, ArrowDown, ArrowLeft, ArrowRight } = keyboardState.current;
+
+    // Check if any movement key is pressed
+    const forward = w || W || ArrowUp;
+    const backward = s || S || ArrowDown;
+    const left = a || A || ArrowLeft;
+    const right = d || D || ArrowRight;
+
+    // Movement Logic
+    if (forward || backward || left || right) {
+      const speed = 2.5 * delta;
+
+      // Calculate movement vector
+      // Mapping: W/Up -> -Z (Away), S/Down -> +Z (Towards), A/Left -> -X, D/Right -> +X
+      const moveX = (left ? -1 : 0) + (right ? 1 : 0);
+      const moveZ = (forward ? -1 : 0) + (backward ? 1 : 0);
+
+      if (moveX !== 0 || moveZ !== 0) {
+        const moveVector = new THREE.Vector3(moveX, 0, moveZ).normalize();
+
+        if (group.current) {
+          // Update Position
+          group.current.position.addScaledVector(moveVector, speed);
+
+          // Update Camera and Controls to follow
+          const movement = moveVector.clone().multiplyScalar(speed);
+          state.camera.position.add(movement);
+          if (state.controls) {
+            // @ts-expect-error: controls is added by OrbitControls makeDefault
+            state.controls.target.add(movement);
+          }
+
+          // Update Rotation to face movement direction
+          // atan2(x, z) gives the angle from Z axis
+          const targetRotation = Math.atan2(moveVector.x, moveVector.z);
+
+          // Smooth rotation
+          const currentRotation = group.current.rotation.y;
+          let angleDiff = targetRotation - currentRotation;
+
+          // Normalize angle difference to [-PI, PI]
+          while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+          while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+
+          // Simple lerp for rotation
+          group.current.rotation.y += angleDiff * 10 * delta;
+        }
+
+        if (animate !== "walking") {
+          setAnimate("walking");
+        }
+      }
+    } else {
+      // If not moving and current animation is walking, switch back to idle/gesture
+      if (animate === "walking") {
+        setAnimate(gesture);
+      }
+    }
+  });
   // Track head or eye end
 
 
@@ -388,9 +480,14 @@ const Avatar = React.memo((props: Props) => {
   }, [getRandomGesture]);
 
   useEffect(() => {
-    setAnimate(gesture)
-    return () => {}
-  }, [gesture])
+    // Only switch to gesture if we are NOT walking
+    const k = keyboardState.current;
+    const isWalking = k.w || k.W || k.a || k.A || k.s || k.S || k.d || k.D || k.ArrowUp || k.ArrowDown || k.ArrowLeft || k.ArrowRight;
+
+    if (!isWalking) {
+      setAnimate(gesture);
+    }
+  }, [gesture]);
 
 
 
@@ -398,12 +495,7 @@ const Avatar = React.memo((props: Props) => {
     <group
       userData={{ name: "Armature" }}
       scale={avatarScale}
-      position={avatarPosition}
-      rotation={[
-        props?.rotate?.x || 0,
-        props?.rotate?.y || 0,
-        props?.rotate?.z || 0,
-      ]}
+
       dispose={null}
       ref={group}
     >
