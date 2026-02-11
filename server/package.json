@@ -11,7 +11,7 @@
     "@aws-sdk/client-polly": "^3.696.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.696.0",
     "@aws-sdk/polly-request-presigner": "^3.696.0",
-    "axios": "^1.12.0",
+    "axios": "^1.13.5",
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "debug": "^4.3.7",
