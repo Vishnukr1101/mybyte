@@ -64,7 +64,7 @@ type Props = {
 const morphTargets =
   "ARKit,Oculus Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown";
 
-const avatarUrl = `https://models.readyplayer.me/67330cd948b71f68bc0fe89a.glb?useQuantizeMeshOptCompression=true&quality=high&textureQuality=high&morphTargets=${morphTargets}&pose=A`;
+const avatarUrl = `/assets/avatars/custom-avatar.glb`;
 
 import { getSpeech } from "../api/speech";
 import AvatarContext from "../hooks/AvatarContext";
