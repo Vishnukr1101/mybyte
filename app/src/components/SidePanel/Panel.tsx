@@ -16,9 +16,13 @@ const Panel = () => {
     const { hidden } = useSectionRefs();
 
     return (
-        <div className="absolute flex-col bottom-0 lg:top-0 h-[44vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto scroll-smooth bg-white rounded-lg shadow-xl transition-all ease-in-out delay-100" style={{
-            right: hidden ? -5000 : 0
-        }}>
+        <div 
+            className="absolute flex-col bottom-0 lg:top-0 h-[44vh] lg:h-[95vh] lg:max-w-[35%] m-4 p-5 overflow-auto scroll-smooth transition-all ease-in-out delay-100 glass-panel" 
+            style={{
+                right: hidden ? -5000 : 0,
+                animation: hidden ? 'none' : 'slideInLeft 0.6s ease-out'
+            }}
+        >
             <React.Suspense fallback={<LoadingScreen />}>
                 <Summary />
                 <Experience />

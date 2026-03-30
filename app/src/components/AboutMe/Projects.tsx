@@ -70,24 +70,37 @@ const Projects = () => {
     const { projectRef } = useSectionRefs();
 
     return (
-        <section className='flex flex-wrap flex-col mt-8' id="projects" ref={projectRef}>
-            <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Projects</h1>
+        <section className='flex flex-wrap flex-col mt-8 section-fade-in' id="projects" ref={projectRef}>
+            <h1 className='text-white text-xl lg:text-2xl font-bold mb-4 gradient-text animate-fade-in'>Projects</h1>
 
-            <ul>
-                {list.map(item => (
-                    <li key={item.title}>
-                        <div className='flex flex-row flex-1 my-4 justify-between items-start'>
-                            <div className="row flex flex-1 flex-col">
-                                <h2 className='text-black text-md'>{item.title}</h2>
-                                <span className='text-xs text-gray-800'>Tech stack : {item.tech.join(', ')}</span>
+            <ul className="space-y-4">
+                {list.map((item, index) => (
+                    <li 
+                        key={item.title}
+                        className="hover-lift"
+                        style={{ 
+                            animation: `slideUp 0.6s ease-out forwards`,
+                            animationDelay: `${index * 0.1}s`
+                        }}
+                    >
+                        <div className='glass-panel p-4 rounded-xl transition-all duration-300'>
+                            <div className='flex flex-row flex-1 my-2 justify-between items-start'>
+                                <div className="row flex flex-1 flex-col">
+                                    <h2 className='text-white text-md font-semibold'>{item.title}</h2>
+                                    <span className='text-xs text-teal-300 mt-2 leading-relaxed'>
+                                        {item.tech.join(' • ')}
+                                    </span>
+                                </div>
+                                {item.duration && (
+                                    <p className='text-xs text-gray-400 ml-2 whitespace-nowrap'>{item.duration}</p>
+                                )}
                             </div>
-                            {item.duration && (<p className='text-xs text-gray-600'>{item.duration}</p>)}
+                            <ul className="list-disc list-inside space-y-1 mt-3 text-xs text-justify text-gray-300">
+                                {item.description.map((points, idx) => (
+                                    <li key={idx} className="leading-relaxed">{points}</li>
+                                ))}
+                            </ul>
                         </div>
-                        <ul className="list-disc list-inside space-y-1 text-xs text-justify text-gray-600">
-                            {item.description.map(points => (
-                                <li key={points}>{points}</li>
-                            ))}
-                        </ul>
                     </li>
                 ))}
 

@@ -25,12 +25,12 @@ const NavigationMenu = () => {
         setHidden(!hidden);
     }
 
-    const buttonClassName = "px-4 py-2 m-2 text-center text-black shadow-md hover:shadow-lg rounded-md min-w-20 bg-white ease-in hover:bg-white hover:text-teal-700"
+    const buttonClassName = "px-4 py-2 m-2 text-center clay-button transition-all duration-300 transform hover:scale-105 active:scale-95"
 
     return (
         <>
-            <div className="absolute bottom-0 hidden xl:flex left-0 right-0">
-                <div className="flex flex-row flex-1 items-center">
+            <div className="absolute bottom-0 hidden xl:flex left-0 right-0 gap-2 px-4 pb-4">
+                <div className="flex flex-row flex-1 items-center justify-start flex-wrap">
                     <button className={buttonClassName} onClick={() => handleScroll(summaryRef)}>
                         Summary
                     </button>
@@ -56,7 +56,7 @@ const NavigationMenu = () => {
                 <div className='absolute top-0 xl:hidden left-0 right-0'>
                     <MenuHandler>
                         <button
-                            className='text-white rounded-full w-9 h-9 p-1 m-1 my-4 outline-none border-none bg-white shadow-sm hover:shadow-md'
+                            className='text-gray-700 rounded-full w-10 h-10 p-1 m-2 outline-none border-none transition-all duration-300 hover:scale-110 active:scale-95 clay-button'
                             onClick={openDrawer}
                             id="menu-button"
                             aria-label='menu button'
@@ -64,7 +64,7 @@ const NavigationMenu = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path
                                     id="SVGRepo_iconCarrier"
-                                    stroke="#000"
+                                    stroke="currentColor"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth="2"
@@ -140,8 +140,12 @@ const NavigationMenu = () => {
 
             </Menu>
 
-            <div className="absolute top-0  m-1 my-4  left-10 xl:left-0 right-0">
-                <button aria-label='Hide panel' className="p-2 text-black shadow-md hover:shadow-lg rounded-full text-center bg-white" onClick={handleHideClick}>
+            <div className="absolute top-0 m-2 my-4 left-10 xl:left-0 right-0">
+                <button 
+                    aria-label='Hide panel' 
+                    className="p-2 text-gray-700 clay-button rounded-full text-center transition-all duration-300 hover:scale-110 active:scale-95" 
+                    onClick={handleHideClick}
+                >
                     {hidden ? <EyeIcon className="w-5 h-5" /> : <EyeSlashIcon className="w-5 h-5" />}
                 </button>
             </div>

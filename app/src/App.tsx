@@ -57,7 +57,7 @@ function App() {
       isFetching, setIsFetching
     }}>
       <ThemeProvider>
-        <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden">
+        <div className="flex flex-1 min-h-screen min-w-screen overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           <Analytics />
           <React.Suspense fallback={<LoadingScreen />}>
             <CanvasPage className="flex flex-1 min-h-screen min-w-screen overflow-hidden" viewMode={false} camera={camera}

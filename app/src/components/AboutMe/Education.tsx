@@ -28,25 +28,33 @@ const Education = () => {
     const { educationRef } = useSectionRefs();
     
     return (
-        <section className='flex flex-wrap flex-col mt-8' id="education" ref={educationRef}>
-            <h1 className='text-black text-xl lg:text-2xl font-bold mb-2'>Education</h1>
+        <section className='flex flex-wrap flex-col mt-8 section-fade-in' id="education" ref={educationRef}>
+            <h1 className='text-white text-xl lg:text-2xl font-bold mb-4 gradient-text animate-fade-in'>Education</h1>
 
-            <ul>
-                {list.map(item => (
-                    <li key={item.title}>
-                        <div className='flex flex-row flex-1 my-4 justify-between items-start'>
-                            <div className="row flex flex-1 flex-col">
-                                <a href={item.url} target='_blank'>
-                                    <h2 className='text-black text-md hover:text-blue-500 hover:underline'>{item.title}</h2>
-                                    <span className='text-xs text-gray-800'>{item.place}</span>
-                                </a>
-                                <a href={item.university.url} target="_blank">
-                                    <span className='text-sm text-gray-800 hover:text-blue-500 hover:underline mt-4'>{item.university.name}</span>
-                                </a>
+            <ul className="space-y-3">
+                {list.map((item, index) => (
+                    <li 
+                        key={item.title}
+                        className="hover-lift"
+                        style={{ 
+                            animation: `slideUp 0.6s ease-out forwards`,
+                            animationDelay: `${index * 0.1}s`
+                        }}
+                    >
+                        <div className='glass-panel p-4 rounded-xl transition-all duration-300'>
+                            <div className='flex flex-row flex-1 my-2 justify-between items-start'>
+                                <div className="row flex flex-1 flex-col">
+                                    <a href={item.url} target='_blank' rel="noreferrer">
+                                        <h2 className='text-white text-md font-semibold hover:text-teal-300 transition-colors'>{item.title}</h2>
+                                        <span className='text-xs text-gray-400 mt-1'>{item.place}</span>
+                                    </a>
+                                    <a href={item.university.url} target="_blank" rel="noreferrer">
+                                        <span className='text-sm text-teal-300 hover:text-teal-200 transition-colors mt-2 inline-block'>{item.university.name}</span>
+                                    </a>
+                                </div>
+                                {item.duration && (<p className='text-xs text-gray-400'>{item.duration}</p>)}
                             </div>
-                            {item.duration && (<p className='text-xs text-gray-600'>{item.duration}</p>)}
                         </div>
-
                     </li>
                 ))}
 
