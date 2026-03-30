@@ -1,4 +1,4 @@
-import { useSectionRefs } from "../SidePanel/SectionRefsContext";
+import { useSectionRefs } from "../SidePanel/useSectionRefs";
 
 const Summary = () => {
     const { summaryRef } = useSectionRefs();

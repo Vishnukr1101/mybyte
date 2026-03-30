@@ -1,17 +1,5 @@
-import React, { createContext, SetStateAction, useContext, useRef, useState } from "react";
-
-type SectionRefs = {
-  summaryRef: React.RefObject<HTMLDivElement>;
-  experienceRef: React.RefObject<HTMLDivElement>;
-  educationRef: React.RefObject<HTMLDivElement>;
-  skillRef: React.RefObject<HTMLDivElement>;
-  projectRef: React.RefObject<HTMLDivElement>;
-  certificationRef: React.RefObject<HTMLDivElement>;
-  hidden: boolean;
-  setHidden: React.Dispatch<SetStateAction<boolean>>
-};
-
-const SectionRefsContext = createContext<SectionRefs | null>(null);
+import React, { useRef, useState } from "react";
+import { SectionRefsContext } from "./SectionRefsContext.types";
 
 export const SectionRefsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const summaryRef = useRef<HTMLDivElement>(null);
@@ -30,8 +18,3 @@ export const SectionRefsProvider: React.FC<{ children: React.ReactNode }> = ({ c
   );
 };
 
-export const useSectionRefs = () => {
-  const context = useContext(SectionRefsContext);
-  if (!context) throw new Error("useSectionRefs must be used within a SectionRefsProvider");
-  return context;
-};

@@ -9,7 +9,7 @@ const Certifications = lazy(() => import('../AboutMe/Certifications'));
 const Footer = lazy(() => import('../AboutMe/Footer'));
 
 import LoadingScreen from '../../components/LoadingScreen';
-import { useSectionRefs } from './SectionRefsContext';
+import { useSectionRefs } from './useSectionRefs';
 
 
 const Panel = () => {

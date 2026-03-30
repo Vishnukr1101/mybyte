@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSectionRefs } from './SectionRefsContext';
+import { useSectionRefs } from './useSectionRefs';
 import {
     Menu,
     MenuHandler,

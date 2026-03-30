@@ -61,8 +61,6 @@ type Props = {
   viewMode?: boolean;
 };
 
-const morphTargets =
-  "ARKit,Oculus Visemes,mouthOpen,mouthSmile,eyesClosed,eyesLookUp,eyesLookDown";
 
 const avatarUrl = `/assets/avatars/custom-avatar.glb`;
 
@@ -162,7 +160,7 @@ const EnvironmentSpace: React.FC<Props> = React.memo((props) => {
     }
 
     return () => { }
-  }, [avatar?.speechText, isAvatarReady])
+  }, [avatar?.speechText, getSpeechData, isAvatarReady])
 
   useEffect(() => {
     // restore camera & orbital target
